@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C-Suite Portfolio Dashboard</title>
+  <style>
+    :root{
+      --bg:#0b0f0c; --panel:#121813; --panel-2:#182019; --line:#2a352c; --text:#eef6ee; --muted:#9eb09f;
+      --brand:#B2FB90; --brand-2:#87d46f; --red:#ff6b6b; --amber:#ffbf47; --green:#55d187;
+      --shadow:0 12px 40px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at top right,#162016 0,#0b0f0c 45%);color:var(--text);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}
+    .wrap{max-width:1400px;margin:0 auto;padding:28px}
+    .hero{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:22px}
+    .hero-left{display:flex;align-items:center;gap:18px}
+    .logo-shell{display:flex;align-items:center;justify-content:center;width:88px;height:88px;border-radius:24px;border:1px solid rgba(178,251,144,.18);background:linear-gradient(180deg,rgba(178,251,144,.1),rgba(255,255,255,.02));box-shadow:var(--shadow)}
+    .logo-shell img{max-width:64px;max-height:64px;display:block}
+    .hero h1{margin:0;font-size:32px;line-height:1.05;letter-spacing:-.03em}
+    .hero p{margin:8px 0 0;color:var(--muted)}
+    .badge{padding:10px 14px;border:1px solid rgba(178,251,144,.25);background:rgba(178,251,144,.08);color:var(--brand);border-radius:999px;font-weight:700;white-space:nowrap}
+    .grid{display:grid;gap:14px}
+    .kpis{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:18px}
+    .risk-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:12px;align-items:stretch}
+    .risk-chart{padding:16px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(178,251,144,.05),rgba(255,255,255,.01))}
+    .risk-chart h3{margin:0 0 14px;font-size:15px}
+    .risk-bars{display:grid;gap:12px}
+    .risk-bar-row{display:grid;grid-template-columns:72px 1fr 34px;gap:10px;align-items:center}
+    .risk-bar-track{height:14px;border-radius:999px;background:#202920;overflow:hidden;position:relative}
+    .risk-bar-fill{position:absolute;left:0;top:0;bottom:0;border-radius:999px}
+    .risk-bar-fill.red{background:linear-gradient(90deg,rgba(255,107,107,.55),var(--red))}
+    .risk-bar-fill.amber{background:linear-gradient(90deg,rgba(255,191,71,.45),var(--amber))}
+    .risk-bar-fill.green{background:linear-gradient(90deg,rgba(85,209,135,.45),var(--green))}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .card::before{content:'';position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(178,251,144,.55),transparent)}
+    .kpi{padding:18px;cursor:pointer;transition:.18s transform,.18s border-color,.18s background}
+    .kpi:hover,.row:hover,.project-card:hover,.pie-item:hover{transform:translateY(-2px);border-color:rgba(178,251,144,.38);background:rgba(178,251,144,.04)}
+    .label{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+    .value{font-size:30px;font-weight:800;margin:8px 0 4px}
+    .sub{color:var(--muted);font-size:12px}
+    .layout{display:grid;grid-template-columns:1.4fr .9fr;gap:18px}
+    .panel{padding:18px}
+    .section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .section-title h2{margin:0;font-size:18px}
+    .pill{padding:6px 10px;border-radius:999px;background:#1d261e;color:var(--muted);border:1px solid var(--line);font-size:12px}
+    .table{display:grid;gap:10px}
+    .thead,.row{display:grid;grid-template-columns:2.5fr 1fr 1.2fr 1fr .8fr .8fr .8fr;gap:10px;align-items:center}
+    .thead{padding:0 10px 8px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+    .row{padding:14px 10px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.015);cursor:pointer}
+    .project{font-weight:700}
+    .client{color:var(--muted);font-size:12px}
+    .mini{font-size:12px;color:var(--muted)}
+    .bar{height:9px;border-radius:999px;background:#202920;overflow:hidden;position:relative}
+    .bar>span{position:absolute;left:0;top:0;bottom:0;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--brand-2))}
+    .variance.pos{color:var(--green);font-weight:700}
+    .variance.neg{color:var(--red);font-weight:700}
+    .risk{display:flex;gap:6px;align-items:center;font-weight:700}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .red{background:var(--red)}
+    .amber{background:var(--amber)}
+    .green{background:var(--green)}
+    .right-grid{display:grid;gap:18px}
+    .projects-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .pie-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+    .pie-wrap{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:center}
+    .pie-chart{width:220px;height:220px;border-radius:50%;border:1px solid var(--line);box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);background:#141b15;position:relative;cursor:pointer}
+    .pie-tooltip{position:fixed;display:none;pointer-events:none;z-index:80;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#101611;color:var(--text);box-shadow:var(--shadow);min-width:160px}
+    .pie-tooltip .mini{margin-top:4px}
+    .pie-legend{display:grid;gap:10px}
+    .pie-item{display:grid;grid-template-columns:14px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#141b15;cursor:pointer;transition:.18s transform,.18s border-color,.18s background}
+    .swatch{width:12px;height:12px;border-radius:50%}
+    .completed-card{padding:16px;cursor:pointer;background:linear-gradient(180deg,rgba(178,251,144,.08),rgba(255,255,255,.015))}
+    .completed-list{display:grid;gap:10px}
+    .completed-item{padding:12px;border:1px solid var(--line);border-radius:14px;background:#141b15}
+    .section-note{margin-top:8px;color:var(--muted);font-size:12px}
+    .project-card{padding:14px;cursor:pointer}
+    .project-card h3{margin:0 0 6px;font-size:15px}
+    .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-bottom:10px;gap:10px}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+    .legend span{display:inline-flex;align-items:center;gap:6px}
+    .modal{position:fixed;inset:0;background:rgba(5,8,6,.72);display:none;align-items:center;justify-content:center;padding:24px;z-index:50}
+    .modal.open{display:flex}
+    .modal-card{width:min(980px,100%);max-height:88vh;overflow:auto;background:#101611;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
+    .modal-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;position:sticky;top:0;background:#101611}
+    .modal-head h3{margin:0;font-size:22px}
+    .close{border:1px solid var(--line);background:#192119;color:var(--text);border-radius:12px;padding:10px 12px;cursor:pointer}
+    .modal-body{padding:20px}
+    .two-col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px}
+    .stat{padding:14px;border:1px solid var(--line);border-radius:16px;background:#141b15}
+    .stat .value{font-size:24px;margin:6px 0 0}
+    .list{display:grid;gap:10px}
+    .list-item{padding:14px;border:1px solid var(--line);border-radius:16px;background:#141b15}
+    .list-item strong{display:block;margin-bottom:6px}
+    .table-simple{width:100%;border-collapse:collapse}
+    .table-simple th,.table-simple td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    .table-simple th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+    @media (max-width:1200px){.kpis{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.projects-grid{grid-template-columns:1fr 1fr}.risk-layout{grid-template-columns:1fr}.pie-wrap{grid-template-columns:1fr}.pie-chart{margin:0 auto}}
+    @media (max-width:780px){.kpis{grid-template-columns:1fr}.thead,.row{grid-template-columns:1.8fr .9fr 1fr .9fr .7fr .7fr .7fr;font-size:12px}.projects-grid,.two-col{grid-template-columns:1fr}.hero{flex-direction:column;align-items:start}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-left">
+        <div class="logo-shell"><img alt="Gathered &amp; Found logo" src="https://cdn.prod.website-files.com/68cab51e59876139c172e583/68cab51e59876139c172e5b7_G%26F%20Logo.svg"></div>
+        <div>
+          <h1>Portfolio Executive Dashboard</h1>
+          <p>Interactive portfolio view for leadership. Click any KPI, risk count, project row or pie legend item to drill into the detail.</p>
+        </div>
+      </div>
+      <div class="badge">Gathered &amp; Found • C-Suite View</div>
+    </div>
+
+    <div class="grid kpis" id="kpis"></div>
+
+    <div class="layout">
+      <div class="card panel">
+        <div class="section-title">
+          <h2>Project Portfolio Overview</h2>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <select id="clientFilter" style="background:#1d261e;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit">
+              <option value="All">All Clients</option>
+            </select>
+            <div class="pill">Click a row for project detail</div>
+          </div>
+        </div>
+        <div class="thead">
+          <div>Project</div><div>Budget</div><div>Spend</div><div>Days Remaining</div><div>Red</div><div>Amber</div><div>Green</div>
+        </div>
+        <div class="table" id="portfolioRows"></div>
+      </div>
+
+      <div class="right-grid">
+        <div class="card panel">
+          <div class="section-title">
+            <h2>Risk Overview</h2>
+            <div class="pill">Graph + clickable counts</div>
+          </div>
+          <div class="risk-layout">
+            <div class="risk-chart">
+              <h3>Portfolio RAID Distribution</h3>
+              <div class="risk-bars" id="riskBars"></div>
+            </div>
+            <div class="projects-grid" id="riskCards"></div>
+          </div>
+        </div>
+
+        <div class="card panel">
+          <div class="section-title">
+            <h2>Portfolio Budget Share</h2>
+            <div class="pill">% of portfolio</div>
+          </div>
+          <div class="pie-controls">
+            <select id="pieViewFilter" style="background:#1d261e;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit">
+              <option value="project">View by Project</option>
+              <option value="client">View by Client</option>
+            </select>
+            <select id="pieClientFilter" style="background:#1d261e;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit">
+              <option value="All">All Clients</option>
+            </select>
+          </div>
+          <div class="pie-wrap">
+            <div class="pie-chart" id="budgetPieChart" aria-label="Portfolio budget share pie chart"></div>
+            <div class="pie-legend" id="budgetPieLegend"></div>
+          </div>
+          <div class="pie-tooltip" id="pieTooltip"></div>
+        </div>
+
+        <div class="card panel completed-card" id="completedProjectsCard">
+          <div class="section-title">
+            <h2>Completed Projects</h2>
+            <div class="pill">Clickable archive view</div>
+          </div>
+          <div class="completed-list" id="completedPreview"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h3 id="modalTitle">Detail</h3>
+          <div class="sub" id="modalSub"></div>
+        </div>
+        <button class="close" id="closeModalBtn">Close</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+<script>
+const data = {
+  completedProjects: [
+    {project:'SEO Content Consultancy',client:'AA Corporation',status:'Completed',totalBudget:38500,notes:'Finished engagement shown as completed in the engagement tracker, including original SOW and change request.',closeSummary:'Delivery complete and no active consultants remaining on the project.'},
+    {project:'Security Posture Review',client:'Blacklane',status:'Completed',totalBudget:31500,notes:'Finished engagement shown as completed in the engagement tracker.',closeSummary:'Project completed and moved out of the active portfolio view.'},
+    {project:'Modularisation & Go Service Enablement',client:'Blacklane',status:'Completed',totalBudget:74910,notes:'SOW 005 extension in the engagement tracker, shown as off-boarded with 2026 delivery dates.',closeSummary:'Completed delivery for Blacklane modularisation and go service enablement.'}
+  ],
+  summary: {
+    committedSpend: 3098156,
+    activeConsultants: 28,
+    expansion30: 2,
+    totalVariance: 22737.5,
+    completedProjects: 3
+  },
+  risks: {
+    red: [
+      {client:'Freemarket FX',project:'Platform Rebuild',category:'Risk',title:'Inconsistency in AI adoption',description:'Consultants report significant variation in how Claude is currently being used, with no defined guardrails or agreed usage patterns. Instances of large sections of generated code being introduced with limited oversight have increased rework risk.',impact:'Increased rework, code quality degradation and maintainability risk.',severity:'High',owner:'Reanie',raisedBy:'Greg / Dermot',actions:'Raise with Greg and Dermot and agree mitigation steps.',status:'Open'},
+      {client:'Blacklane',project:'Security Posture Review',category:'Issue',title:'No framework for interim support payments',description:'Commercial process for interim support billing remains unclear.',impact:'Potential delay to billing and revenue recovery.',severity:'High',owner:'Chris',raisedBy:'Mieke',actions:'Chris aligning with Dirk on how the additional work will be billed.',status:'In progress'}
+    ],
+    amber: [
+      {client:'Freemarket FX',project:'Platform Rebuild',category:'Risk',title:'Delivery timelines based on incomplete cross-team dependency visibility',description:'Requested frontend timelines were created without full confirmed backend and design sequencing.',impact:'Timeline commitments may prove inaccurate and create avoidable delivery exposure.',severity:'High',owner:'Reanie',raisedBy:'Menelik Williams',actions:'Menelik is proposing changes to ways of working to improve timeline confidence.',status:'In progress'},
+      {client:'Freemarket FX',project:'Platform Rebuild',category:'Issue',title:'Too many suggestions slowing delivery and causing team friction',description:'Repeated improvement suggestions are being raised without sufficient delivery value.',impact:'Team friction, slower delivery and offboarding risk.',severity:'Medium',owner:'Reanie',raisedBy:'Steve Adey',actions:'Discuss with Steve which improvements should be raised to best support delivery.',status:'In progress'},
+      {client:'Freemarket FX',project:'Platform Rebuild',category:'Issue',title:'Too many suggestions slowing delivery and causing team friction',description:'Improvement suggestions are being raised in excess and may be impeding delivery flow.',impact:'Team friction, slower delivery and offboarding risk.',severity:'Low',owner:'Reanie',raisedBy:'Zac Downs',actions:'Discuss with Zac which suggestions are materially valuable for delivery.',status:'In progress'}
+    ],
+    green: [
+      {client:'Freemarket FX',project:'Platform Rebuild',category:'Risk',title:'Focus on progress improvements may distract from delivery',description:'Good process improvement suggestions are being made but require monitoring to ensure output remains on track.',impact:'Reduced delivery speed risk if unmanaged.',severity:'Low',owner:'Reanie',raisedBy:'Menelik Williams',actions:'Monitor delivery output and continue reviewing balance between improvement and execution.',status:'Monitoring'}
+    ]
+  },
+  projects: [
+    {project:'AI Roadmap Development Support',client:'AA Corporation',remainingDays:25,totalBudget:61500,budgetSpentPct:73.2,progressPct:80.5,surplusDeficit:0,consultants:1,expansion30:0,red:0,amber:0,green:0},
+    {project:'Data Platform Stabilisation & Renaissance Integration',client:'Freemarket FX',remainingDays:63,totalBudget:57035,budgetSpentPct:19.7,progressPct:28.4,surplusDeficit:935,consultants:1,expansion30:0,red:0,amber:0,green:0},
+    {project:'Digital Product Analysis',client:'AA Corporation',remainingDays:42,totalBudget:62500,budgetSpentPct:62.4,progressPct:76.7,surplusDeficit:6000,consultants:1,expansion30:0,red:0,amber:0,green:0},
+    {project:'Digital Transformation Programme',client:'AXA Health',remainingDays:116,totalBudget:568236,budgetSpentPct:32.0,progressPct:34.5,surplusDeficit:0,consultants:4,expansion30:0,red:0,amber:0,green:0},
+    {project:'Mobile Application Development',client:'Burger & Beyond',remainingDays:0,totalBudget:43250,budgetSpentPct:75.1,progressPct:100.0,surplusDeficit:0,consultants:1,expansion30:0,red:0,amber:0,green:0},
+    {project:'Platform Rebuild',client:'Freemarket FX',remainingDays:116,totalBudget:1622225,budgetSpentPct:39.2,progressPct:51.7,surplusDeficit:15427.5,consultants:13,expansion30:2,red:1,amber:3,green:1},
+    {project:'Product Consultancy',client:'AA Corporation',remainingDays:7,totalBudget:54000,budgetSpentPct:84.7,progressPct:93.2,surplusDeficit:375,consultants:1,expansion30:0,red:0,amber:0,green:0},
+    {project:'SDLC Productivity Metrics',client:'AXA UK',remainingDays:70,totalBudget:178750,budgetSpentPct:47.6,progressPct:62.6,surplusDeficit:0,consultants:1,expansion30:0,red:0,amber:0,green:0},
+    {project:'Software Development Engineering in Test',client:'AXA Health',remainingDays:25,totalBudget:55800,budgetSpentPct:93.5,progressPct:70.9,surplusDeficit:0,consultants:1,expansion30:0,red:0,amber:0,green:0},
+    {project:'Technology Operating Model Discovery & Design',client:'AA Corporation',remainingDays:55,totalBudget:249950,budgetSpentPct:100.0,progressPct:37.5,surplusDeficit:0,consultants:4,expansion30:0,red:0,amber:0,green:0}
+  ]
+};
+
+const fmtMoney = n => '£' + Number(n).toLocaleString('en-GB', { maximumFractionDigits: 1 });
+const fmtPct = n => Number(n).toFixed(1) + '%';
+const el = id => document.getElementById(id);
+const escapeHtml = value => String(value)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
+let selectedClient = 'All';
+let pieView = 'project';
+let pieClientFilter = 'All';
+let currentPieSegments = [];
+
+function getFilteredProjects() {
+  return selectedClient === 'All'
+    ? data.projects
+    : data.projects.filter(project => project.client === selectedClient);
+}
+
+function getProjectRisks(projectName) {
+  return ['red', 'amber', 'green'].flatMap(colour =>
+    data.risks[colour]
+      .filter(risk => risk.project === projectName)
+      .map(risk => ({ ...risk, colour }))
+  );
+}
+
+const kpis = [
+  { label:'Portfolio Committed Spend', value:() => fmtMoney(data.summary.committedSpend), sub:'Click to view SOW budget by project', action:'showBudgetBreakdown' },
+  { label:'Active Consultants', value:() => data.summary.activeConsultants, sub:'Portfolio-wide active consultant count', action:'showConsultantsBreakdown' },
+  { label:'Expansion Last 30 Days', value:() => data.summary.expansion30, sub:'New project additions in last 30 days', action:'showExpansionBreakdown' },
+  { label:'Completed Projects', value:() => data.summary.completedProjects, sub:'Click to view recently completed engagements', action:'showCompletedProjects' },
+  { label:'Surplus / Deficit', value:() => fmtMoney(data.summary.totalVariance), sub:'Projects currently showing a positive variance line', action:'showVarianceBreakdown' }
+];
+
+function renderKPIs() {
+  el('kpis').innerHTML = kpis.map(kpi => `
+    <div class="card kpi" data-action="${kpi.action}">
+      <div class="label">${escapeHtml(kpi.label)}</div>
+      <div class="value">${escapeHtml(kpi.value())}</div>
+      <div class="sub">${escapeHtml(kpi.sub)}</div>
+    </div>
+  `).join('');
+}
+
+function renderClientFilter() {
+  const clients = ['All', ...new Set(data.projects.map(project => project.client))];
+  el('clientFilter').innerHTML = clients.map(client => `
+    <option value="${escapeHtml(client)}" ${client === selectedClient ? 'selected' : ''}>${escapeHtml(client)}</option>
+  `).join('');
+}
+
+function renderPieClientFilter() {
+  const clients = ['All', ...new Set(data.projects.map(project => project.client))];
+  el('pieClientFilter').innerHTML = clients.map(client => `
+    <option value="${escapeHtml(client)}" ${client === pieClientFilter ? 'selected' : ''}>${escapeHtml(client)}</option>
+  `).join('');
+}
+
+function getPieProjects() {
+  return pieClientFilter === 'All'
+    ? data.projects
+    : data.projects.filter(project => project.client === pieClientFilter);
+}
+
+function setClientFilter(client) {
+  selectedClient = client;
+  renderPortfolio();
+  renderBudgetShare();
+}
+
+function renderPortfolio() {
+  const projects = getFilteredProjects();
+  el('portfolioRows').innerHTML = projects.length ? projects.map(project => `
+    <div class="row" data-project="${escapeHtml(project.project)}">
+      <div><div class="project">${escapeHtml(project.project)}</div><div class="client">${escapeHtml(project.client)}</div></div>
+      <div><strong>${fmtMoney(project.totalBudget)}</strong></div>
+      <div><strong>${fmtPct(project.budgetSpentPct)}</strong><div class="mini">budget spent</div></div>
+      <div><strong>${project.remainingDays}</strong><div class="mini">days</div></div>
+      <div class="risk"><span class="dot red"></span>${project.red}</div>
+      <div class="risk"><span class="dot amber"></span>${project.amber}</div>
+      <div class="risk"><span class="dot green"></span>${project.green}</div>
+    </div>
+  `).join('') : '<div class="list-item">No projects match this client filter.</div>';
+}
+
+function renderRiskBars() {
+  const total = Math.max(data.risks.red.length, data.risks.amber.length, data.risks.green.length, 1);
+  const rows = [
+    ['Red', 'red', data.risks.red.length],
+    ['Amber', 'amber', data.risks.amber.length],
+    ['Green', 'green', data.risks.green.length]
+  ];
+
+  el('riskBars').innerHTML = rows.map(([label, key, count]) => `
+    <div class="risk-bar-row">
+      <div class="mini">${label}</div>
+      <div class="risk-bar-track"><div class="risk-bar-fill ${key}" style="width:${(count / total) * 100}%"></div></div>
+      <div><strong>${count}</strong></div>
+    </div>
+  `).join('');
+}
+
+function renderRiskCards() {
+  const cards = [
+    ['Red Risks', 'red', data.risks.red.length, 'Immediate attention required'],
+    ['Amber Risks', 'amber', data.risks.amber.length, 'Watch closely and mitigate'],
+    ['Green Risks', 'green', data.risks.green.length, 'Monitor but stable']
+  ];
+
+  el('riskCards').innerHTML = cards.map(([title, key, count, sub]) => `
+    <div class="card project-card" data-risk="${key}">
+      <div class="meta"><span>${title}</span><span class="risk"><span class="dot ${key}"></span>${count}</span></div>
+      <h3>${count} item${count === 1 ? '' : 's'}</h3>
+      <div class="sub">${sub}</div>
+    </div>
+  `).join('');
+}
+
+function renderBudgetShare() {
+  const sourceProjects = getPieProjects();
+  const palette = ['#B2FB90','#87d46f','#55d187','#ffbf47','#ff6b6b','#8ecae6','#cdb4db','#f4a261','#90be6d','#e9c46a'];
+
+  let segments;
+  if (pieView === 'client') {
+    const grouped = Object.values(sourceProjects.reduce((acc, project) => {
+      if (!acc[project.client]) acc[project.client] = { label: project.client, client: project.client, totalBudget: 0, type: 'client' };
+      acc[project.client].totalBudget += project.totalBudget;
+      return acc;
+    }, {}));
+    segments = grouped.sort((a, b) => b.totalBudget - a.totalBudget);
+  } else {
+    segments = [...sourceProjects]
+      .sort((a, b) => b.totalBudget - a.totalBudget)
+      .map(project => ({ ...project, label: project.project, type: 'project' }));
+  }
+
+  const totalBudget = segments.reduce((sum, item) => sum + item.totalBudget, 0);
+
+  if (!segments.length || !totalBudget) {
+    currentPieSegments = [];
+    el('budgetPieChart').style.background = '#141b15';
+    el('budgetPieLegend').innerHTML = '<div class="list-item">No projects match this pie chart filter.</div>';
+    return;
+  }
+
+  let currentAngle = 0;
+  const chartSegments = segments.map((item, index) => {
+    const share = (item.totalBudget / totalBudget) * 100;
+    const start = currentAngle;
+    currentAngle += share;
+    return { ...item, share, color: palette[index % palette.length], start, end: currentAngle };
+  });
+
+  currentPieSegments = chartSegments;
+  const gradient = chartSegments.map(segment => `${segment.color} ${segment.start}% ${segment.end}%`).join(', ');
+  el('budgetPieChart').style.background = `conic-gradient(${gradient})`;
+
+  el('budgetPieLegend').innerHTML = chartSegments.map(segment => `
+    <div class="pie-item" data-${segment.type}="${escapeHtml(segment.label)}">
+      <span class="swatch" style="background:${segment.color}"></span>
+      <div>
+        <strong>${escapeHtml(segment.label)}</strong>
+        <div class="mini">${segment.type === 'project' ? `${escapeHtml(segment.client)} • ` : ''}${fmtMoney(segment.totalBudget)}</div>
+      </div>
+      <div><strong>${fmtPct(segment.share)}</strong></div>
+    </div>
+  `).join('');
+}
+
+function renderProjectCards() {
+  renderBudgetShare();
+}
+
+function renderCompletedPreview() {
+  el('completedPreview').innerHTML = data.completedProjects.map(project => `
+    <div class="completed-item">
+      <strong>${escapeHtml(project.project)}</strong>
+      <div class="client">${escapeHtml(project.client)}</div>
+      <div class="sub" style="margin-top:6px">${escapeHtml(project.status)} • ${fmtMoney(project.totalBudget)}</div>
+    </div>
+  `).join('');
+}
+
+function openModal(title, sub, body) {
+  el('modalTitle').textContent = title;
+  el('modalSub').textContent = sub || '';
+  el('modalBody').innerHTML = body;
+  el('modal').classList.add('open');
+}
+
+function closeModal() {
+  el('modal').classList.remove('open');
+}
+
+function showProject(index) {
+  const project = data.projects[index];
+  if (!project) return;
+
+  const varianceClass = project.surplusDeficit >= 0 ? 'pos' : 'neg';
+  const projectRisks = getProjectRisks(project.project);
+  const riskDescriptionBlock = projectRisks.length ? `
+    <div class="list-item"><strong>Risk Descriptions</strong>
+      <div class="list" style="margin-top:10px">
+        ${projectRisks.map(risk => `
+          <div class="list-item">
+            <strong><span class="risk"><span class="dot ${risk.colour}"></span>${escapeHtml(risk.title)}</span></strong>
+            ${escapeHtml(risk.description)}
+            <div class="mini" style="margin-top:6px">${escapeHtml(risk.category)} • ${escapeHtml(risk.status)} • Owner: ${escapeHtml(risk.owner)}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  ` : '<div class="list-item"><strong>Risk Descriptions</strong>No RAID items currently logged against this project.</div>';
+
+  const body = `
+    <div class="two-col">
+      <div class="stat"><div class="label">Committed Budget</div><div class="value">${fmtMoney(project.totalBudget)}</div></div>
+      <div class="stat"><div class="label">Remaining Time</div><div class="value">${project.remainingDays} days</div></div>
+      <div class="stat"><div class="label">Budget Spent</div><div class="value">${fmtPct(project.budgetSpentPct)}</div><div class="bar"><span style="width:${project.budgetSpentPct}%"></span></div></div>
+      <div class="stat"><div class="label">Days Remaining</div><div class="value">${project.remainingDays} days</div></div>
+      <div class="stat"><div class="label">Consultants</div><div class="value">${project.consultants}</div></div>
+      <div class="stat"><div class="label">Surplus / Deficit</div><div class="value variance ${varianceClass}">${fmtMoney(project.surplusDeficit)}</div></div>
+    </div>
+    <div class="list">
+      <div class="list-item"><strong>Risk Position</strong><div class="legend"><span><span class="dot red"></span> Red ${project.red}</span><span><span class="dot amber"></span> Amber ${project.amber}</span><span><span class="dot green"></span> Green ${project.green}</span><span>Expansion last 30 days: ${project.expansion30}</span></div></div>
+      ${riskDescriptionBlock}
+      <div class="list-item"><strong>Executive Readout</strong>${escapeHtml(project.project)} for ${escapeHtml(project.client)} has ${project.remainingDays} days remaining and ${fmtPct(project.budgetSpentPct)} budget consumed.</div>
+    </div>
+  `;
+
+  openModal(project.project, project.client, body);
+}
+
+function showProjectByName(name) {
+  const index = data.projects.findIndex(project => project.project === name);
+  if (index > -1) showProject(index);
+}
+
+function showRiskList(key) {
+  const title = key.charAt(0).toUpperCase() + key.slice(1) + ' Risks';
+  const items = data.risks[key] || [];
+
+  openModal(title, `${items.length} item${items.length === 1 ? '' : 's'} in the current portfolio view`, `
+    <table class="table-simple">
+      <thead><tr><th>Client / Project</th><th>Title</th><th>Impact</th><th>Owner</th><th>Status</th></tr></thead>
+      <tbody>
+        ${items.map(risk => `
+          <tr>
+            <td><strong>${escapeHtml(risk.client)}</strong><br>${escapeHtml(risk.project)}</td>
+            <td><strong>${escapeHtml(risk.title)}</strong><br><span class="mini">${escapeHtml(risk.description)}</span></td>
+            <td>${escapeHtml(risk.impact || '—')}<br><span class="mini">Action: ${escapeHtml(risk.actions || '—')}</span></td>
+            <td>${escapeHtml(risk.owner)}<br><span class="mini">Raised by ${escapeHtml(risk.raisedBy || '—')}</span></td>
+            <td>${escapeHtml(risk.status)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `);
+}
+
+function showBudgetBreakdown() {
+  const activeRows = data.projects.map(project => ({ ...project, portfolioType: 'Active' }));
+  const completedRows = data.completedProjects.map(project => ({ ...project, portfolioType: 'Completed' }));
+  const rows = [...activeRows, ...completedRows].sort((a, b) => b.totalBudget - a.totalBudget);
+
+  openModal('Portfolio Committed Spend', 'Total 2026 SOW budget across active and completed engagements', `
+    <div class="stat" style="margin-bottom:14px"><div class="label">2026 Portfolio Total</div><div class="value">${fmtMoney(data.summary.committedSpend)}</div></div>
+    <table class="table-simple">
+      <thead><tr><th>Project</th><th>Client</th><th>Portfolio Type</th><th>Committed Budget</th><th>Share of Portfolio</th></tr></thead>
+      <tbody>
+        ${rows.map(project => `
+          <tr>
+            <td>${escapeHtml(project.project)}</td>
+            <td>${escapeHtml(project.client)}</td>
+            <td>${escapeHtml(project.portfolioType)}</td>
+            <td>${fmtMoney(project.totalBudget)}</td>
+            <td>${fmtPct((project.totalBudget / data.summary.committedSpend) * 100)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `);
+}
+
+function showConsultantsBreakdown() {
+  const rows = [...data.projects].sort((a, b) => b.consultants - a.consultants);
+  openModal('Active Consultants', 'Total active consultant count shown on this dashboard', `
+    <div class="stat" style="margin-bottom:14px"><div class="label">Portfolio Total</div><div class="value">${data.summary.activeConsultants}</div></div>
+    <table class="table-simple">
+      <thead><tr><th>Project</th><th>Client</th><th>Consultants</th></tr></thead>
+      <tbody>
+        ${rows.map(project => `
+          <tr><td>${escapeHtml(project.project)}</td><td>${escapeHtml(project.client)}</td><td>${project.consultants}</td></tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `);
+}
+
+function showExpansionBreakdown() {
+  const rows = data.projects.filter(project => project.expansion30 > 0);
+  openModal('Expansion in the Last 30 Days', 'Projects showing recent growth in the current portfolio view', rows.length ? `
+    <table class="table-simple">
+      <thead><tr><th>Project</th><th>Client</th><th>Expansion Count</th><th>Consultants</th></tr></thead>
+      <tbody>
+        ${rows.map(project => `
+          <tr><td>${escapeHtml(project.project)}</td><td>${escapeHtml(project.client)}</td><td>${project.expansion30}</td><td>${project.consultants}</td></tr>
+        `).join('')}
+      </tbody>
+    </table>
+  ` : '<div class="list-item">No projects are currently showing expansion in the last 30 days.</div>');
+}
+
+function showVarianceBreakdown() {
+  const rows = data.projects.filter(project => project.surplusDeficit !== 0).sort((a, b) => b.surplusDeficit - a.surplusDeficit);
+  openModal('Surplus / Deficit View', 'Projects currently showing a non-zero variance line', `
+    <div class="stat" style="margin-bottom:14px"><div class="label">Portfolio Variance Total</div><div class="value">${fmtMoney(data.summary.totalVariance)}</div></div>
+    <table class="table-simple">
+      <thead><tr><th>Project</th><th>Client</th><th>Variance</th><th>Days Remaining</th><th>Spend</th></tr></thead>
+      <tbody>
+        ${rows.map(project => `
+          <tr><td>${escapeHtml(project.project)}</td><td>${escapeHtml(project.client)}</td><td class="variance ${project.surplusDeficit >= 0 ? 'pos' : 'neg'}">${fmtMoney(project.surplusDeficit)}</td><td>${project.remainingDays}</td><td>${fmtPct(project.budgetSpentPct)}</td></tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `);
+}
+
+function showCompletedProjects() {
+  const rows = data.completedProjects;
+  const totalCompletedBudget = rows.reduce((sum, project) => sum + project.totalBudget, 0);
+  openModal('Completed Projects', 'Finished engagements from the engagement tracker', `
+    <div class="two-col" style="margin-bottom:14px">
+      <div class="stat"><div class="label">Completed Projects</div><div class="value">${rows.length}</div></div>
+      <div class="stat"><div class="label">Committed Budget</div><div class="value">${fmtMoney(totalCompletedBudget)}</div></div>
+    </div>
+    <table class="table-simple">
+      <thead><tr><th>Project</th><th>Client</th><th>Status</th><th>Committed Budget</th><th>Close Summary</th></tr></thead>
+      <tbody>
+        ${rows.map(project => `
+          <tr>
+            <td>${escapeHtml(project.project)}</td>
+            <td>${escapeHtml(project.client)}</td>
+            <td>${escapeHtml(project.status)}</td>
+            <td>${fmtMoney(project.totalBudget)}</td>
+            <td>${escapeHtml(project.closeSummary)}<br><span class="mini">${escapeHtml(project.notes)}</span></td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `);
+}
+
+function getPieSegmentAtPosition(event) {
+  const pie = el('budgetPieChart');
+  const rect = pie.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  const dx = event.clientX - centerX;
+  const dy = event.clientY - centerY;
+  const radius = rect.width / 2;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+
+  if (distance > radius || !currentPieSegments.length) return null;
+
+  let angle = Math.atan2(dy, dx) * (180 / Math.PI);
+  angle = (angle + 90 + 360) % 360;
+  const anglePct = (angle / 360) * 100;
+
+  return currentPieSegments.find(segment => anglePct >= segment.start && anglePct < segment.end) || currentPieSegments[currentPieSegments.length - 1];
+}
+
+function showPieTooltip(event, segment) {
+  const tooltip = el('pieTooltip');
+  const secondary = segment.type === 'project' ? `${escapeHtml(segment.client)} • ${fmtMoney(segment.totalBudget)}` : fmtMoney(segment.totalBudget);
+  tooltip.innerHTML = `<strong>${escapeHtml(segment.label)}</strong><div class="mini">${secondary}</div><div class="mini">${fmtPct(segment.share)} of current portfolio view</div>`;
+  tooltip.style.display = 'block';
+  tooltip.style.left = `${event.clientX + 14}px`;
+  tooltip.style.top = `${event.clientY + 14}px`;
+}
+
+function hidePieTooltip() {
+  el('pieTooltip').style.display = 'none';
+}
+
+function bindEvents() {
+  el('clientFilter').addEventListener('change', event => setClientFilter(event.target.value));
+  el('pieViewFilter').addEventListener('change', event => {
+    pieView = event.target.value;
+    renderBudgetShare();
+  });
+  el('pieClientFilter').addEventListener('change', event => {
+    pieClientFilter = event.target.value;
+    renderBudgetShare();
+  });
+  el('closeModalBtn').addEventListener('click', closeModal);
+  el('completedProjectsCard').addEventListener('click', showCompletedProjects);
+
+  el('kpis').addEventListener('click', event => {
+    const card = event.target.closest('[data-action]');
+    if (!card) return;
+    const actionName = card.dataset.action;
+    if (typeof window[actionName] === 'function') {
+      window[actionName]();
+    }
+  });
+
+  el('portfolioRows').addEventListener('click', event => {
+    const row = event.target.closest('[data-project]');
+    if (!row) return;
+    showProjectByName(row.dataset.project);
+  });
+
+  el('budgetPieChart').addEventListener('mousemove', event => {
+    const segment = getPieSegmentAtPosition(event);
+    if (!segment) {
+      hidePieTooltip();
+      return;
+    }
+    showPieTooltip(event, segment);
+  });
+
+  el('budgetPieChart').addEventListener('mouseleave', hidePieTooltip);
+
+  el('budgetPieLegend').addEventListener('click', event => {
+    const projectItem = event.target.closest('[data-project]');
+    if (projectItem) {
+      showProjectByName(projectItem.dataset.project);
+      return;
+    }
+    const clientItem = event.target.closest('[data-client]');
+    if (clientItem) {
+      pieClientFilter = clientItem.dataset.client;
+      el('pieClientFilter').value = pieClientFilter;
+      pieView = 'project';
+      el('pieViewFilter').value = 'project';
+      renderBudgetShare();
+    }
+  });
+
+  el('riskCards').addEventListener('click', event => {
+    const card = event.target.closest('[data-risk]');
+    if (!card) return;
+    showRiskList(card.dataset.risk);
+  });
+
+  window.addEventListener('click', event => {
+    if (event.target.id === 'modal') closeModal();
+  });
+}
+
+function runTests() {
+  console.assert(typeof renderProjectCards === 'function', 'renderProjectCards should exist for backwards compatibility');
+  console.assert(typeof renderBudgetShare === 'function', 'renderBudgetShare should exist');
+  console.assert(Array.isArray(getFilteredProjects()), 'Filtered projects should return an array');
+  console.assert(getProjectRisks('Platform Rebuild').length === 5, 'Platform Rebuild should return 5 linked risks');
+  console.assert(data.projects.find(project => project.project === 'Platform Rebuild').client === 'Freemarket FX', 'Platform Rebuild should belong to Freemarket FX');
+
+  const originalClient = selectedClient;
+  selectedClient = 'AA Corporation';
+  console.assert(getFilteredProjects().every(project => project.client === 'AA Corporation'), 'Client filter should only return AA Corporation projects');
+  selectedClient = originalClient;
+
+  console.assert(typeof escapeHtml('<test>') === 'string' && escapeHtml('<test>') === '&lt;test&gt;', 'escapeHtml should escape angle brackets');
+  pieClientFilter = 'AA Corporation';
+  console.assert(getPieProjects().every(project => project.client === 'AA Corporation'), 'Pie client filter should only return AA Corporation projects');
+  pieClientFilter = 'All';
+  pieView = 'client';
+  renderBudgetShare();
+  console.assert(el('budgetPieLegend').children.length > 0, 'Client pie legend should render at least one item');
+  pieView = 'project';
+  const aaProjects = data.projects.filter(project => project.client === 'AA Corporation');
+  const aaTotal = aaProjects.reduce((sum, project) => sum + project.totalBudget, 0);
+  console.assert(aaTotal > 0, 'AA Corporation filtered total should be greater than zero');
+
+  renderProjectCards();
+  console.assert(el('budgetPieLegend').children.length > 0, 'Pie legend should render at least one item');
+  console.assert(Array.isArray(currentPieSegments) && currentPieSegments.length > 0, 'Pie segments should be stored for hover behaviour');
+}
+
+function init() {
+  renderKPIs();
+  renderClientFilter();
+  renderPieClientFilter();
+  renderPortfolio();
+  renderRiskBars();
+  renderRiskCards();
+  renderBudgetShare();
+  renderCompletedPreview();
+  bindEvents();
+  runTests();
+}
+
+init();
+</script>
+</body>
+</html>
