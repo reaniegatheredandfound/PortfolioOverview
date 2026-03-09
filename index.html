@@ -22,6 +22,17 @@
     .badge{padding:10px 14px;border:1px solid rgba(178,251,144,.25);background:rgba(178,251,144,.08);color:var(--brand);border-radius:999px;font-weight:700;white-space:nowrap}
     .grid{display:grid;gap:14px}
     .kpis{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:18px}
+    .invoice-card{padding:18px;margin-bottom:18px}
+    .invoice-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
+.invoice-chart{position:relative;height:220px;padding:18px 14px 34px;border:1px solid var(--line);border-radius:16px;background:#141b15;display:flex;align-items:flex-end;gap:14px}
+.invoice-month{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.invoice-bars{width:100%;height:150px;display:flex;align-items:flex-end;justify-content:center;gap:8px;border-bottom:1px solid #202920;padding-bottom:8px}
+.invoice-bar{width:18px;border-radius:8px 8px 4px 4px}
+.invoice-bar.actual{background:var(--brand)}
+.invoice-bar.predicted{background:var(--amber)}
+.invoice-bar:hover{transform:translateY(-2px);opacity:.92}
+.invoice-month-label{margin-top:8px;font-size:12px;color:var(--muted);font-weight:700}
+.invoice-tooltip{position:fixed;display:none;pointer-events:none;z-index:90;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#101611;color:var(--text);box-shadow:var(--shadow);min-width:150px}
     .risk-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:12px;align-items:stretch}
     .risk-chart{padding:16px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(178,251,144,.05),rgba(255,255,255,.01))}
     .risk-chart h3{margin:0 0 14px;font-size:15px}
@@ -95,8 +106,8 @@
     .table-simple{width:100%;border-collapse:collapse}
     .table-simple th,.table-simple td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
     .table-simple th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
-    @media (max-width:1200px){.kpis{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.projects-grid{grid-template-columns:1fr 1fr}.risk-layout{grid-template-columns:1fr}.pie-wrap{grid-template-columns:1fr}.pie-chart{margin:0 auto}}
-    @media (max-width:780px){.kpis{grid-template-columns:1fr}.thead,.row{grid-template-columns:1.8fr .9fr 1fr .9fr .7fr .7fr .7fr;font-size:12px}.projects-grid,.two-col{grid-template-columns:1fr}.hero{flex-direction:column;align-items:start}}
+    @media (max-width:1200px){.kpis{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.projects-grid{grid-template-columns:1fr 1fr}.risk-layout{grid-template-columns:1fr}.pie-wrap{grid-template-columns:1fr}.pie-chart{margin:0 auto}.invoice-chart{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media (max-width:780px){.kpis{grid-template-columns:1fr}.thead,.row{grid-template-columns:1.8fr .9fr 1fr .9fr .7fr .7fr .7fr;font-size:12px}.projects-grid,.two-col,.invoice-chart{grid-template-columns:1fr}.hero{flex-direction:column;align-items:start}}
   </style>
 </head>
 <body>
@@ -113,6 +124,15 @@
     </div>
 
     <div class="grid kpis" id="kpis"></div>
+
+    <div class="card invoice-card">
+      <div class="section-title">
+        <h2>Monthly Invoice Value</h2>
+        <div class="legend"><span><span class="dot" style="background:var(--brand)"></span>Actual</span><span><span class="dot" style="background:var(--amber)"></span>Predicted</span></div>
+      </div>
+      <div class="invoice-chart" id="invoiceChart"></div>
+      <div class="invoice-tooltip" id="invoiceTooltip"></div>
+    </div>
 
     <div class="layout">
       <div class="card panel">
@@ -205,6 +225,14 @@ const data = {
     totalVariance: 21590,
     completedProjects: 3
   },
+  invoiceValues: [
+    {month:'Jan 26',actual:418096,predicted:0},
+    {month:'Feb 26',actual:630550,predicted:0},
+    {month:'Mar 26',actual:0,predicted:449156},
+    {month:'Apr 26',actual:0,predicted:514014.5},
+    {month:'May 26',actual:0,predicted:359417.25},
+    {month:'Jun 26',actual:0,predicted:371996.75}
+  ],
   risks: {
     red: [
       {client:'Blacklane',project:'Security Posture Review',category:'Issue',title:'No framework for interim support payments',description:'Commercial process for interim support billing remains unclear.',impact:'Potential delay to billing and revenue recovery.',severity:'High',owner:'Chris',raisedBy:'Mieke',actions:'Chris is agreeing with Dirk how this additional work will be billed.',status:'Open'},
@@ -247,6 +275,20 @@ let selectedClient = 'All';
 let pieView = 'project';
 let pieClientFilter = 'All';
 let currentPieSegments = [];
+
+function renderInvoiceChart() {
+  const maxValue = Math.max(...data.invoiceValues.map(item => Math.max(item.actual, item.predicted)), 1);
+
+  el('invoiceChart').innerHTML = data.invoiceValues.map(item => `
+    <div class="invoice-month">
+      <div class="invoice-bars">
+        <div class="invoice-bar actual" title="${escapeHtml(item.month)} actual: ${fmtMoney(item.actual)}" style="height:${item.actual ? Math.max((item.actual / maxValue) * 130, 8) : 0}px;${item.actual ? '' : 'display:none;'}"></div>
+        <div class="invoice-bar predicted" title="${escapeHtml(item.month)} predicted: ${fmtMoney(item.predicted)}" style="height:${item.predicted ? Math.max((item.predicted / maxValue) * 130, 8) : 0}px;${item.predicted ? '' : 'display:none;'}"></div>
+      </div>
+      <div class="invoice-month-label">${escapeHtml(item.month)}</div>
+    </div>
+  `).join('');
+}
 
 function getFilteredProjects() {
   return selectedClient === 'All'
@@ -620,6 +662,20 @@ function showPieTooltip(event, segment) {
 function hidePieTooltip() {
   el('pieTooltip').style.display = 'none';
 }
+function showInvoiceTooltip(event) {
+  const bar = event.target.closest('.invoice-bar');
+  if (!bar) return;
+
+  const tooltip = el('invoiceTooltip');
+  tooltip.innerHTML = `<strong>${bar.getAttribute('title').split(':')[0]}</strong><div class="mini">${bar.getAttribute('title').split(': ').slice(1).join(': ')}</div>`;
+  tooltip.style.display = 'block';
+  tooltip.style.left = `${event.clientX + 14}px`;
+  tooltip.style.top = `${event.clientY + 14}px`;
+}
+
+function hideInvoiceTooltip() {
+  el('invoiceTooltip').style.display = 'none';
+}
 
 function bindEvents() {
   el('clientFilter').addEventListener('change', event => setClientFilter(event.target.value));
@@ -633,6 +689,8 @@ function bindEvents() {
   });
   el('closeModalBtn').addEventListener('click', closeModal);
   el('completedProjectsCard').addEventListener('click', showCompletedProjects);
+  el('invoiceChart').addEventListener('mousemove', showInvoiceTooltip);
+el('invoiceChart').addEventListener('mouseleave', hideInvoiceTooltip);
 
   el('kpis').addEventListener('click', event => {
     const card = event.target.closest('[data-action]');
@@ -693,6 +751,7 @@ function runTests() {
   console.assert(Array.isArray(getFilteredProjects()), 'Filtered projects should return an array');
   console.assert(getProjectRisks('Platform Rebuild').length === 5, 'Platform Rebuild should return 5 linked risks');
   console.assert(data.projects.find(project => project.project === 'Platform Rebuild').client === 'Freemarket FX', 'Platform Rebuild should belong to Freemarket FX');
+  console.assert(el('invoiceChart').children.length === 6, 'Invoice chart should render 6 months');
 
   const originalClient = selectedClient;
   selectedClient = 'AA Corporation';
@@ -718,6 +777,7 @@ function runTests() {
 
 function init() {
   renderKPIs();
+  renderInvoiceChart();
   renderClientFilter();
   renderPieClientFilter();
   renderPortfolio();
