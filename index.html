@@ -111,7 +111,30 @@
   </style>
 </head>
 <body>
-  <div class="wrap">
+
+  <div id="loginBox" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0b0f0c;color:#eef6ee;font-family:Inter,Segoe UI,Arial,sans-serif;">
+    <div style="background:#121813;padding:40px;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.28);text-align:center;border:1px solid #2a352c;min-width:320px;">
+      <h2 style="margin:0 0 20px;">Portfolio Dashboard</h2>
+      <input
+        type="password"
+        id="passwordInput"
+        placeholder="Enter password"
+        onkeydown="if(event.key==='Enter'){checkPassword()}"
+        style="padding:12px;border-radius:12px;border:1px solid #2a352c;background:#141b15;color:#eef6ee;width:100%;max-width:260px;"
+      >
+      <div id="errorMessage" style="color:#ff6b6b;margin-top:10px;min-height:18px;font-size:14px;"></div>
+      <button
+        onclick="checkPassword()"
+        style="margin-top:10px;padding:10px 20px;border:none;border-radius:12px;background:#B2FB90;color:#0b0f0c;font-weight:700;cursor:pointer;"
+      >
+        Enter
+      </button>
+    </div>
+  </div>
+
+  <div id="dashboardContent" style="display:none;">
+    <div class="wrap">
+
     <div class="hero">
       <div class="hero-left">
         <div class="logo-shell"><img alt="Gathered &amp; Found logo" src="https://cdn.prod.website-files.com/68cab51e59876139c172e583/68cab51e59876139c172e5b7_G%26F%20Logo.svg"></div>
@@ -196,9 +219,11 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
 
   <div class="modal" id="modal">
+
     <div class="modal-card">
       <div class="modal-head">
         <div>
@@ -212,7 +237,22 @@
   </div>
 
 <script>
+function checkPassword() {
+  const password = "gandf2026";
+  const entered = document.getElementById("passwordInput").value;
+  const errorMessage = document.getElementById("errorMessage");
+
+  if (entered === password) {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("dashboardContent").style.display = "block";
+    errorMessage.textContent = "";
+  } else {
+    errorMessage.textContent = "Incorrect password";
+  }
+}
+
 const data = {
+
   completedProjects: [
     {project:'SEO Content Consultancy',client:'AA Corporation',status:'Completed',totalBudget:38500,notes:'Finished engagement shown as completed in the engagement tracker, including original SOW and change request.',closeSummary:'Delivery complete and no active consultants remaining on the project.'},
     {project:'Security Posture Review',client:'Blacklane',status:'Completed',totalBudget:31500,notes:'Finished engagement shown as completed in the engagement tracker.',closeSummary:'Project completed and moved out of the active portfolio view.'},
