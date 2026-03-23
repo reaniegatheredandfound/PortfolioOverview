@@ -253,18 +253,39 @@ function checkPassword() {
 
 const data = {
 
-  completedProjects: [
-    {project:'SEO Content Consultancy',client:'AA Corporation',status:'Completed',totalBudget:38500,notes:'Finished engagement shown as completed in the engagement tracker, including original SOW and change request.',closeSummary:'Delivery complete and no active consultants remaining on the project.'},
-    {project:'Security Posture Review',client:'Blacklane',status:'Completed',totalBudget:31500,notes:'Finished engagement shown as completed in the engagement tracker.',closeSummary:'Project completed and moved out of the active portfolio view.'},
-    {project:'Modularisation & Go Service Enablement',client:'Blacklane',status:'Completed',totalBudget:74910,notes:'SOW 005 extension in the engagement tracker, shown as off-boarded with 2026 delivery dates.',closeSummary:'Completed delivery for Blacklane modularisation and go service enablement.'}
-  ],
-  summary: {
-    committedSpend: 3098156,
-    activeConsultants: 28,
-    expansion30: 2,
-    totalVariance: 21590,
-    completedProjects: 3
+completedProjects: [
+  {
+    project: 'SEO Content Consultancy',
+    client: 'AA Corporation',
+    status: 'Completed',
+    totalBudget: 38500,
+    notes: 'Finished engagement shown as off-boarded in the engagement tracker, including original SOW and change request.',
+    closeSummary: 'Delivery complete and no active consultants remaining on the project.'
   },
+  {
+    project: 'Security Posture Review',
+    client: 'Blacklane',
+    status: 'Completed',
+    totalBudget: 31500,
+    notes: 'Finished engagement shown as off-boarded in the engagement tracker.',
+    closeSummary: 'Project completed and moved out of the active portfolio view.'
+  },
+  {
+    project: 'Modularisation & Go Service Enablement',
+    client: 'Blacklane',
+    status: 'Completed',
+    totalBudget: 123147,
+    notes: 'Finished engagement shown as off-boarded in the engagement tracker.',
+    closeSummary: 'Completed delivery for Blacklane modularisation and go service enablement.'
+  }
+],
+summary: {
+  committedSpend: 3311213,
+  activeConsultants: 30,
+  expansion30: 0,
+  totalVariance: 28835,
+  completedProjects: 3
+},
   invoiceValues: [
     {month:'Jan 26',actual:418096,predicted:0},
     {month:'Feb 26',actual:630550,predicted:0},
@@ -287,18 +308,162 @@ const data = {
       {client:'Freemarket FX',project:'Platform Rebuild',category:'Risk',title:'Focus on progress improvements may distract from delivery',description:'Menelik provides good suggestions on process improvements, some of which Freemarket have implemented. This is not causing delivery issues at this time, but should be monitored.',impact:'Reduced delivery speed risk if unmanaged.',severity:'Low',owner:'Reanie',raisedBy:'Menelik Williams',actions:'Monitor delivery output and continue reviewing the balance between improvement and execution.',status:'Monitoring'}
     ]
   },
-  projects: [
-    {project:'AI Roadmap Development Support',client:'AA Corporation',remainingDays:22,totalBudget:61500,budgetSpentPct:73.2,progressPct:82.8,surplusDeficit:0,consultants:1,expansion30:0,red:0,amber:0,green:0},
-    {project:'Data Platform Stablisation & Renaissance Integration ',client:'Freemarket FX',remainingDays:60,totalBudget:57035,budgetSpentPct:19.7,progressPct:31.8,surplusDeficit:935,consultants:1,expansion30:0,red:0,amber:0,green:0},
-    {project:'Digital Product Analysis',client:'AA Corporation',remainingDays:39,totalBudget:62500,budgetSpentPct:62.4,progressPct:78.3,surplusDeficit:7000,consultants:1,expansion30:0,red:0,amber:0,green:0},
-    {project:'Digital Transformation Programme',client:'AXA Health',remainingDays:113,totalBudget:568236,budgetSpentPct:32.0,progressPct:36.2,surplusDeficit:0,consultants:4,expansion30:0,red:0,amber:0,green:0},
-    {project:'Mobile Application Development ',client:'Burger & Beyond',remainingDays:0,totalBudget:43250,budgetSpentPct:75.1,progressPct:100.0,surplusDeficit:0,consultants:1,expansion30:0,red:0,amber:0,green:0},
-    {project:'Platform Rebuild',client:'Freemarket FX',remainingDays:113,totalBudget:1622225,budgetSpentPct:39.2,progressPct:52.9,surplusDeficit:15427.5,consultants:13,expansion30:2,red:0,amber:3,green:1},
-    {project:'Product Consultancy',client:'AA Corporation',remainingDays:4,totalBudget:54000,budgetSpentPct:84.7,progressPct:96.1,surplusDeficit:750,consultants:1,expansion30:0,red:0,amber:0,green:0},
-    {project:'SDLC Productivity Metrics',client:'AXA UK',remainingDays:67,totalBudget:178750,budgetSpentPct:47.6,progressPct:64.2,surplusDeficit:0,consultants:1,expansion30:0,red:0,amber:0,green:0},
-    {project:'Software Development Engineering in Test',client:'AXA Health',remainingDays:22,totalBudget:55800,budgetSpentPct:93.5,progressPct:74.4,surplusDeficit:0,consultants:1,expansion30:0,red:0,amber:0,green:0},
-    {project:'Technology Operating Model Discovery & Design',client:'AA Corporation',remainingDays:52,totalBudget:249950,budgetSpentPct:100.0,progressPct:40.9,surplusDeficit:-2522.5,consultants:4,expansion30:0,red:1,amber:0,green:0}
-  ]
+projects: [
+  {
+    project: 'AI Roadmap Development Support',
+    client: 'AA Corporation',
+    remainingDays: 38,
+    totalBudget: 76500,
+    budgetSpentPct: 0.5882352941176471,
+    progressPct: 0.759493670886076,
+    surplusDeficit: 0,
+    consultants: 1,
+    expansion30: 0,
+    red: 0,
+    amber: 0,
+    green: 0
+  },
+  {
+    project: 'Data Platform Stablisation & Renaissance Integration',
+    client: 'Freemarket FX',
+    remainingDays: 46,
+    totalBudget: 57035,
+    budgetSpentPct: 0.19672131147540983,
+    progressPct: 0.4772727272727273,
+    surplusDeficit: 935,
+    consultants: 1,
+    expansion30: 0,
+    red: 0,
+    amber: 0,
+    green: 0
+  },
+  {
+    project: 'Digital Product Analysis',
+    client: 'AA Corporation',
+    remainingDays: 25,
+    totalBudget: 62500,
+    budgetSpentPct: 0.624,
+    progressPct: 0.8611111111111112,
+    surplusDeficit: 7000,
+    consultants: 1,
+    expansion30: 0,
+    red: 0,
+    amber: 0,
+    green: 0
+  },
+  {
+    project: 'Digital Transformation Programme',
+    client: 'AXA Health',
+    remainingDays: 99,
+    totalBudget: 568236,
+    budgetSpentPct: 0.32003428153091323,
+    progressPct: 0.4406779661016949,
+    surplusDeficit: 0,
+    consultants: 4,
+    expansion30: 0,
+    red: 0,
+    amber: 0,
+    green: 0
+  },
+  {
+    project: 'Mobile Application Development',
+    client: 'Burger & Beyond',
+    remainingDays: 0,
+    totalBudget: 43250,
+    budgetSpentPct: 0.7514450867052023,
+    progressPct: 1,
+    surplusDeficit: 0,
+    consultants: 1,
+    expansion30: 0,
+    red: 0,
+    amber: 0,
+    green: 0
+  },
+  {
+    project: 'Platform Rebuild',
+    client: 'Freemarket FX',
+    remainingDays: 99,
+    totalBudget: 1622225,
+    budgetSpentPct: 0.39221902017291066,
+    progressPct: 0.5875,
+    surplusDeficit: 15427.5,
+    consultants: 13,
+    expansion30: 0,
+    red: 0,
+    amber: 3,
+    green: 1
+  },
+  {
+    project: 'Platform Security Uplift',
+    client: 'Blacklane',
+    remainingDays: 95,
+    totalBudget: 149820,
+    budgetSpentPct: 0,
+    progressPct: 0.010416666666666666,
+    surplusDeficit: 0,
+    consultants: 2,
+    expansion30: 0,
+    red: 0,
+    amber: 0,
+    green: 0
+  },
+  {
+    project: 'Product Consultancy',
+    client: 'AA Corporation',
+    remainingDays: 0,
+    totalBudget: 54000,
+    budgetSpentPct: 0.8472222222222222,
+    progressPct: 1,
+    surplusDeficit: 750,
+    consultants: 1,
+    expansion30: 0,
+    red: 0,
+    amber: 0,
+    green: 0
+  },
+  {
+    project: 'SDLC Productivity Metrics',
+    client: 'AXA UK',
+    remainingDays: 53,
+    totalBudget: 178750,
+    budgetSpentPct: 0.4755244755244755,
+    progressPct: 0.7165775401069518,
+    surplusDeficit: 0,
+    consultants: 1,
+    expansion30: 0,
+    red: 0,
+    amber: 0,
+    green: 0
+  },
+  {
+    project: 'Software Development Engineering in Test',
+    client: 'AXA Health',
+    remainingDays: 8,
+    totalBudget: 55800,
+    budgetSpentPct: 0.9354838709677419,
+    progressPct: 0,
+    surplusDeficit: 0,
+    consultants: 1,
+    expansion30: 0,
+    red: 0,
+    amber: 0,
+    green: 0
+  },
+  {
+    project: 'Technology Operating Model Discovery & Design',
+    client: 'AA Corporation',
+    remainingDays: 38,
+    totalBudget: 249950,
+    budgetSpentPct: 1,
+    progressPct: 0.9069767441860465,
+    surplusDeficit: 4722.5,
+    consultants: 4,
+    expansion30: 0,
+    red: 1,
+    amber: 0,
+    green: 0
+  }
+]
 };
 
 const fmtMoney = n => '£' + Number(n).toLocaleString('en-GB', { maximumFractionDigits: 1 });
