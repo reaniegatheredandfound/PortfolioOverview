@@ -148,15 +148,6 @@
 
     <div class="grid kpis" id="kpis"></div>
 
-    <div class="card invoice-card">
-      <div class="section-title">
-        <h2>Monthly Invoice Value</h2>
-        <div class="legend"><span><span class="dot" style="background:var(--brand)"></span>Actual</span><span><span class="dot" style="background:var(--amber)"></span>Predicted</span></div>
-      </div>
-      <div class="invoice-chart" id="invoiceChart"></div>
-      <div class="invoice-tooltip" id="invoiceTooltip"></div>
-    </div>
-
 <div class="layout">
   <div class="card panel">
     <div class="section-title">
@@ -293,14 +284,6 @@ summary: {
   totalVariance: 28835,
   completedProjects: 4
 },
-  invoiceValues: [
-    {month:'Jan 26',actual:418096,predicted:0},
-    {month:'Feb 26',actual:630550,predicted:0},
-    {month:'Mar 26',actual:0,predicted:449156},
-    {month:'Apr 26',actual:0,predicted:514014.5},
-    {month:'May 26',actual:0,predicted:359417.25},
-    {month:'Jun 26',actual:0,predicted:371996.75}
-  ],
   risks: {
     red: [
     ],
@@ -909,8 +892,6 @@ function bindEvents() {
   });
   el('closeModalBtn').addEventListener('click', closeModal);
   el('completedProjectsCard').addEventListener('click', showCompletedProjects);
-  el('invoiceChart').addEventListener('mousemove', showInvoiceTooltip);
-el('invoiceChart').addEventListener('mouseleave', hideInvoiceTooltip);
 
   el('kpis').addEventListener('click', event => {
     const card = event.target.closest('[data-action]');
@@ -971,7 +952,7 @@ function runTests() {
   console.assert(Array.isArray(getFilteredProjects()), 'Filtered projects should return an array');
   console.assert(getProjectRisks('Platform Rebuild').length === 5, 'Platform Rebuild should return 5 linked risks');
   console.assert(data.projects.find(project => project.project === 'Platform Rebuild').client === 'Freemarket FX', 'Platform Rebuild should belong to Freemarket FX');
-  console.assert(el('invoiceChart').children.length === 6, 'Invoice chart should render 6 months');
+
 
   const originalClient = selectedClient;
   selectedClient = 'AA Corporation';
@@ -997,7 +978,6 @@ function runTests() {
 
 function init() {
   renderKPIs();
-  renderInvoiceChart();
   renderClientFilter();
   renderPieClientFilter();
   renderPortfolio();
