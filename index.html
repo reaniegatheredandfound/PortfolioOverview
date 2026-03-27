@@ -21,7 +21,7 @@
     .hero p{margin:8px 0 0;color:var(--muted)}
     .badge{padding:10px 14px;border:1px solid rgba(178,251,144,.25);background:rgba(178,251,144,.08);color:var(--brand);border-radius:999px;font-weight:700;white-space:nowrap}
     .grid{display:grid;gap:14px}
-    .kpis{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:18px}
+    .kpis{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:18px}
     .invoice-card{padding:18px;margin-bottom:18px}
     .invoice-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
 .invoice-chart{position:relative;height:220px;padding:18px 14px 34px;border:1px solid var(--line);border-radius:16px;background:#141b15;display:flex;align-items:flex-end;gap:14px}
@@ -510,12 +510,13 @@ function getProjectRisks(projectName) {
   );
 }
 
-const kpis = [
+ const kpis = [
   { label:'Portfolio Committed Spend', value:() => fmtMoney(data.summary.committedSpend), sub:'Click to view SOW budget by project', action:'showBudgetBreakdown' },
   { label:'Active Consultants', value:() => data.summary.activeConsultants, sub:'Portfolio-wide active consultant count', action:'showConsultantsBreakdown' },
   { label:'Expansion Last 30 Days', value:() => data.summary.expansion30, sub:'New project additions in last 30 days', action:'showExpansionBreakdown' },
   { label:'Completed Projects', value:() => data.summary.completedProjects, sub:'Click to view recently completed engagements', action:'showCompletedProjects' },
-  { label:'Surplus / Deficit', value:() => fmtMoney(data.summary.totalVariance), sub:'Projects currently showing a positive variance line', action:'showVarianceBreakdown' }
+  { label:'Surplus / Deficit', value:() => fmtMoney(data.summary.totalVariance), sub:'Projects currently showing a positive variance line', action:'showVarianceBreakdown' },
+  { label:'Upcoming Finishers (<60 Days)', value:() => 9, sub:'Delivery capacity at risk in next 60 days', action:'showUpcomingFinishers' },
 ];
 
 function renderKPIs() {
@@ -807,6 +808,112 @@ openModal('Surplus / Deficit View', 'Projects currently showing a non-zero varia
     </tbody>
   </table>
 `);
+}
+function showUpcomingFinishers() {
+  openModal(
+    'Upcoming Finishers (<60 Days)',
+    'Red = <30 days (urgent) • Amber = 30–60 days (watchlist)',
+    `
+    <table class="table-simple">
+      <thead>
+        <tr>
+          <th>Consultant</th>
+          <th>Client</th>
+          <th>Project</th>
+          <th>Days Remaining</th>
+          <th>Status</th>
+          <th>Comment</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- 🔴 RED: <30 DAYS -->
+        <tr>
+          <td><strong>Gabriel Ng</strong></td>
+          <td>Freemarket FX</td>
+          <td>Platform Rebuild</td>
+          <td style="color:#ff6b6b;font-weight:700;">3</td>
+          <td><span style="color:#ff6b6b;font-weight:700;">In progress</span></td>
+          <td>Extension in progress</td>
+        </tr>
+
+        <tr>
+          <td><strong>Sadaf Rashidi</strong></td>
+          <td>AXA Health</td>
+          <td>SDET</td>
+          <td style="color:#ff6b6b;font-weight:700;">20</td>
+          <td><span style="color:#ff6b6b;font-weight:700;">Offboarding</span></td>
+          <td>Offboarding confirmed 26/03 </td>
+        </tr>
+
+        <!-- 🟠 AMBER: 30–60 DAYS -->
+        <tr>
+          <td>Pete Bagnall</td>
+          <td>AA Corporation</td>
+          <td>AI Roadmap</td>
+          <td style="color:#ffbf47;font-weight:700;">34</td>
+          <td><span style="color:#ffbf47;font-weight:700;">Watch</span></td>
+          <td>Update expected mid-April</td>
+        </tr>
+
+        <tr>
+          <td>Andrew Barlow</td>
+          <td>AA Corporation</td>
+          <td>TOM Design</td>
+          <td style="color:#ffbf47;font-weight:700;">34</td>
+        <td><span style="color:#ffbf47;font-weight:700;">Watch</span></td>
+          <td>Unknown</td>
+        </tr>
+
+        <tr>
+          <td>Andrew Broome</td>
+          <td>AA Corporation</td>
+          <td>TOM Design</td>
+          <td style="color:#ffbf47;font-weight:700;">34</td>
+          <td><span style="color:#ffbf47;font-weight:700;">Watch</span></td>
+          <td>Unknown</td>
+        </tr>
+
+        <tr>
+          <td>Selina Kantepudi</td>
+          <td>AA Corporation</td>
+          <td>TOM Design</td>
+          <td style="color:#ffbf47;font-weight:700;">34</td>
+          <td><span style="color:#ffbf47;font-weight:700;">Watch</span></td>
+          <td>Unknown</td>
+        </tr>
+
+        <tr>
+          <td>Adam Scoot</td>
+          <td>AA Corporation</td>
+          <td>TOM Design</td>
+          <td style="color:#ffbf47;font-weight:700;">34</td>
+          <td><span style="color:#ffbf47;font-weight:700;">Watch</span></td>
+          <td>Unknown</td>
+        </tr>
+
+        <tr>
+          <td>Younes Child</td>
+          <td>Freemarket FX</td>
+          <td>Data Platform</td>
+          <td style="color:#ffbf47;font-weight:700;">42</td>
+          <td>Watch</td>
+          <td>Extension likely</td>
+        </tr>
+
+        <tr>
+          <td>Marton Meszaros</td>
+          <td>AXA UK</td>
+          <td>Productivity Metrics</td>
+          <td style="color:#ffbf47;font-weight:700;">49</td>
+          <td>Watch</td>
+          <td>Extension likely</td>
+        </tr>
+
+      </tbody>
+    </table>
+    `
+  );
 }
 
 function showCompletedProjects() {
