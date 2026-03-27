@@ -281,7 +281,6 @@ summary: {
   committedSpend: 3372923,
   activeConsultants: 30,
   expansion30: 1,
-  totalVariance: 28835,
   completedProjects: 4
 },
   risks: {
@@ -291,6 +290,19 @@ summary: {
   {client:'Freemarket FX',project:'Platform Rebuild',category:'Risk',title:'Delivery timelines based on incomplete cross-team dependency visibility',description:'Frontend delivery timelines requested by senior stakeholders without full visibility of backend and design sequencing or timelines. Estimates therefore remain based on assumptions rather than confirmed cross-team plans.',impact:'Timeline commitments may prove inaccurate and create avoidable delivery exposure.',severity:'High',owner:'Reanie',raisedBy:'Menelik Williams',actions:'Menelik is working on a proposal with Martin on simple changes to ways of working to improve estimate confidence.',status:'Monitoring'},
   {client:'Freemarket FX',project:'Platform Rebuild',category:'Issue',title:'Too many suggestions slowing delivery and causing team friction',description:'Steve has been reported as slowing delivery by repeatedly suggesting alternative ways of working and improvements beyond what is needed for immediate delivery.',impact:'Team friction, offboarding risk and reduced delivery speed.',severity:'Medium',owner:'Reanie',raisedBy:'Steve Adey',actions:'Discuss with Steve which improvements should and should not be raised to best support delivery.',status:'In progress'},
   {client:'Freemarket FX',project:'Platform Rebuild',category:'Issue',title:'Too many suggestions slowing delivery and causing team friction',description:'Zac has been reported as slowing delivery by repeatedly suggesting alternative ways of working and improvements beyond what is needed for immediate delivery.',impact:'Team friction, offboarding risk and reduced delivery speed.',severity:'Low',owner:'Reanie',raisedBy:'Zac Downs',actions:'Discuss with Zac which improvements should and should not be raised to best support delivery.',status:'In progress'},
+  {
+  client:'Freemarket FX',
+  project:'Platform Rebuild',
+  category:'Issue',
+  title:'Cultural issues',
+  description:'Excessive micromanagement by Paul Smith is impacting team members including Menelik, Steve and Wayne.',
+  impact:'Reduced morale, delivery friction and potential offboarding risk.',
+  severity:'Medium',
+  owner:'Reanie',
+  raisedBy:'Wayne',
+  actions:'Address behaviours directly and align on appropriate team management approach.',
+  status:'In progress'
+},
   {
     client:'Freemarket FX',
     project:'Platform Rebuild',
@@ -306,7 +318,20 @@ summary: {
   }
 ],
     green: [
-      {client:'Freemarket FX',project:'Platform Rebuild',category:'Risk',title:'Focus on progress improvements may distract from delivery',description:'Menelik provides good suggestions on process improvements, some of which Freemarket have implemented. This is not causing delivery issues at this time, but should be monitored.',impact:'Reduced delivery speed risk if unmanaged.',severity:'Low',owner:'Reanie',raisedBy:'Menelik Williams',actions:'Monitor delivery output and continue reviewing the balance between improvement and execution.',status:'Monitoring'}
+      {client:'Freemarket FX',project:'Platform Rebuild',category:'Risk',title:'Focus on progress improvements may distract from delivery',description:'Menelik provides good suggestions on process improvements, some of which Freemarket have implemented. This is not causing delivery issues at this time, but should be monitored.',impact:'Reduced delivery speed risk if unmanaged.',severity:'Low',owner:'Reanie',raisedBy:'Menelik Williams',actions:'Monitor delivery output and continue reviewing the balance between improvement and execution.',status:'Monitoring'},
+      {
+  client:'AXA Health',
+  project:'Digital Transformation Programme',
+  category:'Risk',
+  title:'SOW consolidation required',
+  description:'Multiple SOWs across the programme require consolidation to simplify commercial structure and improve governance.',
+  impact:'Commercial complexity and reduced clarity across engagement structure.',
+  severity:'Low',
+  owner:'Chris',
+  raisedBy:'Tara Williams',
+  actions:'Review and consolidate SOW structure across the programme.',
+  status:'Monitoring'
+}
     ]
   },
 projects: [
@@ -378,7 +403,7 @@ projects: [
     expansion30: 0,
     red: 0,
     amber: 0,
-    green: 0
+    green: 1
   },
   {
     project: 'Mobile Application Development',
@@ -405,7 +430,7 @@ projects: [
     consultants: 13,
     expansion30: 0,
     red: 0,
-    amber: 4,
+    amber: 5,
     green: 1
   },
   {
@@ -515,7 +540,6 @@ function getProjectRisks(projectName) {
   { label:'Active Consultants', value:() => data.summary.activeConsultants, sub:'Portfolio-wide active consultant count', action:'showConsultantsBreakdown' },
   { label:'Expansion Last 30 Days', value:() => data.summary.expansion30, sub:'New project additions in last 30 days', action:'showExpansionBreakdown' },
   { label:'Completed Projects', value:() => data.summary.completedProjects, sub:'Click to view recently completed engagements', action:'showCompletedProjects' },
-  { label:'Surplus / Deficit', value:() => fmtMoney(data.summary.totalVariance), sub:'Projects currently showing a positive variance line', action:'showVarianceBreakdown' },
   { label:'Upcoming Finishers (<60 Days)', value:() => 9, sub:'Delivery capacity at risk in next 60 days', action:'showUpcomingFinishers' },
 ];
 
@@ -795,20 +819,6 @@ function showExpansionBreakdown() {
   ` : '<div class="list-item">No projects are currently showing expansion in the last 30 days.</div>');
 }
 
-function showVarianceBreakdown() {
-  const rows = data.projects.filter(project => project.surplusDeficit !== 0).sort((a, b) => b.surplusDeficit - a.surplusDeficit);
-openModal('Surplus / Deficit View', 'Projects currently showing a non-zero variance line', `
-  <div class="stat" style="margin-bottom:14px"><div class="label">Portfolio Variance Total</div><div class="value">${fmtMoney(data.summary.totalVariance)}</div></div>
-  <table class="table-simple">
-    <thead><tr><th>Project</th><th>Client</th><th>Variance</th><th>Days Remaining</th></tr></thead>
-    <tbody>
-      ${rows.map(project => `
-        <tr><td>${escapeHtml(project.project)}</td><td>${escapeHtml(project.client)}</td><td class="variance ${project.surplusDeficit >= 0 ? 'pos' : 'neg'}">${fmtMoney(project.surplusDeficit)}</td><td>${project.remainingDays}</td></tr>
-      `).join('')}
-    </tbody>
-  </table>
-`);
-}
 function showUpcomingFinishers() {
   openModal(
     'Upcoming Finishers (<60 Days)',
@@ -1057,7 +1067,7 @@ function runTests() {
   console.assert(typeof renderProjectCards === 'function', 'renderProjectCards should exist for backwards compatibility');
   console.assert(typeof renderBudgetShare === 'function', 'renderBudgetShare should exist');
   console.assert(Array.isArray(getFilteredProjects()), 'Filtered projects should return an array');
-  console.assert(getProjectRisks('Platform Rebuild').length === 5, 'Platform Rebuild should return 5 linked risks');
+console.assert(getProjectRisks('Platform Rebuild').length === 6, 'Platform Rebuild should return 6 linked risks');
   console.assert(data.projects.find(project => project.project === 'Platform Rebuild').client === 'Freemarket FX', 'Platform Rebuild should belong to Freemarket FX');
 
 
