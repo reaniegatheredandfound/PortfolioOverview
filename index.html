@@ -21,18 +21,18 @@
     .hero p{margin:8px 0 0;color:var(--muted)}
     .badge{padding:10px 14px;border:1px solid rgba(178,251,144,.25);background:rgba(178,251,144,.08);color:var(--brand);border-radius:999px;font-weight:700;white-space:nowrap}
     .grid{display:grid;gap:14px}
-    .kpis{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:18px}
+    .kpis{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:18px}
     .invoice-card{padding:18px;margin-bottom:18px}
     .invoice-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
-.invoice-chart{position:relative;height:220px;padding:18px 14px 34px;border:1px solid var(--line);border-radius:16px;background:#141b15;display:flex;align-items:flex-end;gap:14px}
-.invoice-month{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
-.invoice-bars{width:100%;height:150px;display:flex;align-items:flex-end;justify-content:center;gap:8px;border-bottom:1px solid #202920;padding-bottom:8px}
-.invoice-bar{width:18px;border-radius:8px 8px 4px 4px}
-.invoice-bar.actual{background:var(--brand)}
-.invoice-bar.predicted{background:var(--amber)}
-.invoice-bar:hover{transform:translateY(-2px);opacity:.92}
-.invoice-month-label{margin-top:8px;font-size:12px;color:var(--muted);font-weight:700}
-.invoice-tooltip{position:fixed;display:none;pointer-events:none;z-index:90;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#101611;color:var(--text);box-shadow:var(--shadow);min-width:150px}
+    .invoice-chart{position:relative;height:220px;padding:18px 14px 34px;border:1px solid var(--line);border-radius:16px;background:#141b15;display:flex;align-items:flex-end;gap:14px}
+    .invoice-month{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+    .invoice-bars{width:100%;height:150px;display:flex;align-items:flex-end;justify-content:center;gap:8px;border-bottom:1px solid #202920;padding-bottom:8px}
+    .invoice-bar{width:18px;border-radius:8px 8px 4px 4px}
+    .invoice-bar.actual{background:var(--brand)}
+    .invoice-bar.predicted{background:var(--amber)}
+    .invoice-bar:hover{transform:translateY(-2px);opacity:.92}
+    .invoice-month-label{margin-top:8px;font-size:12px;color:var(--muted);font-weight:700}
+    .invoice-tooltip{position:fixed;display:none;pointer-events:none;z-index:90;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#101611;color:var(--text);box-shadow:var(--shadow);min-width:150px}
     .risk-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:12px;align-items:stretch}
     .risk-chart{padding:16px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(178,251,144,.05),rgba(255,255,255,.01))}
     .risk-chart h3{margin:0 0 14px;font-size:15px}
@@ -107,7 +107,7 @@
     .table-simple th,.table-simple td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
     .table-simple th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
     @media (max-width:1200px){.kpis{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.projects-grid{grid-template-columns:1fr 1fr}.risk-layout{grid-template-columns:1fr}.pie-wrap{grid-template-columns:1fr}.pie-chart{margin:0 auto}.invoice-chart{grid-template-columns:repeat(3,minmax(0,1fr))}}
-   @media (max-width:780px){.kpis{grid-template-columns:1fr}.thead,.row{grid-template-columns:1.8fr .9fr .9fr .7fr .7fr .7fr;font-size:12px}.projects-grid,.two-col,.invoice-chart{grid-template-columns:1fr}.hero{flex-direction:column;align-items:start}}
+    @media (max-width:780px){.kpis{grid-template-columns:1fr}.thead,.row{grid-template-columns:1.8fr .9fr .9fr .7fr .7fr .7fr;font-size:12px}.projects-grid,.two-col,.invoice-chart{grid-template-columns:1fr}.hero{flex-direction:column;align-items:start}}
   </style>
 </head>
 <body>
@@ -135,85 +135,85 @@
   <div id="dashboardContent" style="display:none;">
     <div class="wrap">
 
-    <div class="hero">
-      <div class="hero-left">
-        <div class="logo-shell"><img alt="Gathered &amp; Found logo" src="https://cdn.prod.website-files.com/68cab51e59876139c172e583/68cab51e59876139c172e5b7_G%26F%20Logo.svg"></div>
-        <div>
-          <h1>Portfolio Executive Dashboard</h1>
-          <p>Interactive portfolio view for leadership. Click any KPI, risk count, project row or pie legend item to drill into the detail.</p>
+      <div class="hero">
+        <div class="hero-left">
+          <div class="logo-shell"><img alt="Gathered &amp; Found logo" src="https://cdn.prod.website-files.com/68cab51e59876139c172e583/68cab51e59876139c172e5b7_G%26F%20Logo.svg"></div>
+          <div>
+            <h1>Portfolio Executive Dashboard</h1>
+            <p>Interactive portfolio view for leadership. Click any KPI, risk count, project row or pie legend item to drill into the detail.</p>
+          </div>
+        </div>
+        <div class="badge">Gathered &amp; Found • C-Suite View</div>
+      </div>
+
+      <div class="grid kpis" id="kpis"></div>
+
+      <div class="layout">
+        <div class="card panel">
+          <div class="section-title">
+            <h2>Project Portfolio Overview</h2>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <select id="clientFilter" style="background:#1d261e;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit">
+                <option value="All">All Clients</option>
+              </select>
+              <div class="pill">Click a row for project detail</div>
+            </div>
+          </div>
+          <div class="thead">
+            <div>Project</div><div>Budget</div><div>Days Remaining</div><div>Red</div><div>Amber</div><div>Green</div>
+          </div>
+          <div class="table" id="portfolioRows"></div>
+        </div>
+
+        <div class="right-grid">
+          <div class="card panel">
+            <div class="section-title">
+              <h2>Risk Overview</h2>
+              <div class="pill">Graph + clickable counts</div>
+            </div>
+            <div class="risk-layout">
+              <div class="risk-chart">
+                <h3>Portfolio RAID Distribution</h3>
+                <div class="risk-bars" id="riskBars"></div>
+              </div>
+              <div class="projects-grid" id="riskCards"></div>
+            </div>
+          </div>
+
+          <div class="card panel">
+            <div class="section-title">
+              <h2>Portfolio Budget Share</h2>
+              <div class="pill">% of portfolio</div>
+            </div>
+            <div class="pie-controls">
+              <select id="pieViewFilter" style="background:#1d261e;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit">
+                <option value="project">View by Project</option>
+                <option value="client">View by Client</option>
+              </select>
+              <select id="pieClientFilter" style="background:#1d261e;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit">
+                <option value="All">All Clients</option>
+              </select>
+            </div>
+            <div class="pie-wrap">
+              <div class="pie-chart" id="budgetPieChart" aria-label="Portfolio budget share pie chart"></div>
+              <div class="pie-legend" id="budgetPieLegend"></div>
+            </div>
+            <div class="pie-tooltip" id="pieTooltip"></div>
+          </div>
+
+          <div class="card panel completed-card" id="completedProjectsCard">
+            <div class="section-title">
+              <h2>Completed Projects</h2>
+              <div class="pill">Clickable archive view</div>
+            </div>
+            <div class="completed-list" id="completedPreview"></div>
+          </div>
         </div>
       </div>
-      <div class="badge">Gathered &amp; Found • C-Suite View</div>
     </div>
-
-    <div class="grid kpis" id="kpis"></div>
-
-<div class="layout">
-  <div class="card panel">
-    <div class="section-title">
-      <h2>Project Portfolio Overview</h2>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <select id="clientFilter" style="background:#1d261e;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit">
-          <option value="All">All Clients</option>
-        </select>
-        <div class="pill">Click a row for project detail</div>
-      </div>
-    </div>
-    <div class="thead">
-      <div>Project</div><div>Budget</div><div>Days Remaining</div><div>Red</div><div>Amber</div><div>Green</div>
-    </div>
-    <div class="table" id="portfolioRows"></div>
   </div>
 
-  <div class="right-grid">
-        <div class="card panel">
-          <div class="section-title">
-            <h2>Risk Overview</h2>
-            <div class="pill">Graph + clickable counts</div>
-          </div>
-          <div class="risk-layout">
-            <div class="risk-chart">
-              <h3>Portfolio RAID Distribution</h3>
-              <div class="risk-bars" id="riskBars"></div>
-            </div>
-            <div class="projects-grid" id="riskCards"></div>
-          </div>
-        </div>
-
-        <div class="card panel">
-          <div class="section-title">
-            <h2>Portfolio Budget Share</h2>
-            <div class="pill">% of portfolio</div>
-          </div>
-          <div class="pie-controls">
-            <select id="pieViewFilter" style="background:#1d261e;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit">
-              <option value="project">View by Project</option>
-              <option value="client">View by Client</option>
-            </select>
-            <select id="pieClientFilter" style="background:#1d261e;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit">
-              <option value="All">All Clients</option>
-            </select>
-          </div>
-          <div class="pie-wrap">
-            <div class="pie-chart" id="budgetPieChart" aria-label="Portfolio budget share pie chart"></div>
-            <div class="pie-legend" id="budgetPieLegend"></div>
-          </div>
-          <div class="pie-tooltip" id="pieTooltip"></div>
-        </div>
-
-        <div class="card panel completed-card" id="completedProjectsCard">
-          <div class="section-title">
-            <h2>Completed Projects</h2>
-            <div class="pill">Clickable archive view</div>
-          </div>
-          <div class="completed-list" id="completedPreview"></div>
-        </div>
-      </div>
-    </div>
-    </div>
-</div>
   <div class="modal" id="modal">
-
     <div class="modal-card">
       <div class="modal-head">
         <div>
@@ -242,254 +242,265 @@ function checkPassword() {
 }
 
 const data = {
-
-completedProjects: [
-  {
-    project: 'SEO Content Consultancy',
-    client: 'AA Corporation',
-    status: 'Completed',
-    totalBudget: 38500,
-    notes: 'Finished engagement shown as off-boarded in the engagement tracker, including original SOW and change request.',
-    closeSummary: 'Delivery complete and no active consultants remaining on the project.'
+  completedProjects: [
+    {
+      project: 'SEO Content Consultancy',
+      client: 'AA Corporation',
+      status: 'Completed',
+      totalBudget: 38500,
+      notes: 'Gillian offboarded early due to budget restraints.',
+      closeSummary: 'No additional work required as it stands.'
+    },
+    {
+      project: 'Security Posture Review',
+      client: 'Blacklane',
+      status: 'Completed',
+      totalBudget: 31500,
+      notes: 'Security audit complete and Mieke offboarded.',
+      closeSummary: 'Additional work won off of the back of the audit.'
+    },
+    {
+      project: 'Modularisation & Go Service Enablement',
+      client: 'Blacklane',
+      status: 'Completed',
+      totalBudget: 123147,
+      notes: 'Luca closed engagement one month early, transitioning to a perm staff member at a transition fee.',
+      closeSummary: 'No additional work required as it stands.'
+    },
+    {
+      project: 'Product Consultancy',
+      client: 'AA Corporation',
+      status: 'Completed',
+      totalBudget: 54000,
+      notes: 'Andrew offboarded after delivering the Pilot of the Crash Detection app feature',
+      closeSummary: 'Potential for additional product support within this area.'
+    },
+    {
+      project: 'Digital Product Analysis',
+      client: 'AA Corporation',
+      status: 'Completed',
+      totalBudget: 62500,
+      notes: 'Sadaf Offboarded on 17th April after completing thorough handover.',
+      closeSummary: 'No additional work required as it stands.'
+    }
+  ],
+  summary: {
+    committedSpend: 3605713,
+    activeConsultants: 28,
+    expansion30: 1,
+    completedProjects: 5
   },
-  {
-    project: 'Security Posture Review',
-    client: 'Blacklane',
-    status: 'Completed',
-    totalBudget: 31500,
-    notes: 'Finished engagement shown as off-boarded in the engagement tracker.',
-    closeSummary: 'Project completed and moved out of the active portfolio view.'
-  },
-  {
-    project: 'Modularisation & Go Service Enablement',
-    client: 'Blacklane',
-    status: 'Completed',
-    totalBudget: 123147,
-    notes: 'Finished engagement shown as off-boarded in the engagement tracker.',
-    closeSummary: 'Completed delivery for Blacklane modularisation and go service enablement.'
-  },
-  {
-  project: 'Product Consultancy',
-  client: 'AA Corporation',
-  status: 'Completed',
-  totalBudget: 54000,
-  notes: 'Engagement now complete and consultant off-boarded.',
-  closeSummary: 'Delivery complete with no remaining active resources.'
-}
-],
-summary: {
-  committedSpend: 3372923,
-  activeConsultants: 30,
-  expansion30: 1,
-  completedProjects: 4
-},
   risks: {
     red: [
-    ],
-  amber: [
-  {client:'Freemarket FX',project:'Platform Rebuild',category:'Risk',title:'Delivery timelines based on incomplete cross-team dependency visibility',description:'Frontend delivery timelines requested by senior stakeholders without full visibility of backend and design sequencing or timelines. Estimates therefore remain based on assumptions rather than confirmed cross-team plans.',impact:'Timeline commitments may prove inaccurate and create avoidable delivery exposure.',severity:'High',owner:'Reanie',raisedBy:'Menelik Williams',actions:'Menelik is working on a proposal with Martin on simple changes to ways of working to improve estimate confidence.',status:'Monitoring'},
-  {client:'Freemarket FX',project:'Platform Rebuild',category:'Issue',title:'Too many suggestions slowing delivery and causing team friction',description:'Steve has been reported as slowing delivery by repeatedly suggesting alternative ways of working and improvements beyond what is needed for immediate delivery.',impact:'Team friction, offboarding risk and reduced delivery speed.',severity:'Medium',owner:'Reanie',raisedBy:'Steve Adey',actions:'Discuss with Steve which improvements should and should not be raised to best support delivery.',status:'In progress'},
-  {client:'Freemarket FX',project:'Platform Rebuild',category:'Issue',title:'Too many suggestions slowing delivery and causing team friction',description:'Zac has been reported as slowing delivery by repeatedly suggesting alternative ways of working and improvements beyond what is needed for immediate delivery.',impact:'Team friction, offboarding risk and reduced delivery speed.',severity:'Low',owner:'Reanie',raisedBy:'Zac Downs',actions:'Discuss with Zac which improvements should and should not be raised to best support delivery.',status:'In progress'},
-  {
-  client:'Freemarket FX',
-  project:'Platform Rebuild',
-  category:'Issue',
-  title:'Cultural issues',
-  description:'Excessive micromanagement by Paul Smith is impacting team members including Menelik, Steve and Wayne.',
-  impact:'Reduced morale, delivery friction and potential offboarding risk.',
-  severity:'Medium',
-  owner:'Reanie',
-  raisedBy:'Wayne',
-  actions:'Address behaviours directly and align on appropriate team management approach.',
-  status:'In progress'
-},
-  {
-    client:'Freemarket FX',
-    project:'Platform Rebuild',
-    category:'Issue',
-    title:"Greg is worried about Mariano's delivery",
-    description:"Concerns raised around Mariano’s delivery performance and confidence in output.",
-    impact:"Potential delivery risk and stakeholder confidence impact.",
-    severity:'Medium',
-    owner:'Reanie',
-    raisedBy:'Greg',
-    actions:'Monitor delivery closely and address any performance gaps proactively.',
-    status:'In progress'
-  }
-],
-    green: [
-      {client:'Freemarket FX',project:'Platform Rebuild',category:'Risk',title:'Focus on progress improvements may distract from delivery',description:'Menelik provides good suggestions on process improvements, some of which Freemarket have implemented. This is not causing delivery issues at this time, but should be monitored.',impact:'Reduced delivery speed risk if unmanaged.',severity:'Low',owner:'Reanie',raisedBy:'Menelik Williams',actions:'Monitor delivery output and continue reviewing the balance between improvement and execution.',status:'Monitoring'},
       {
-  client:'AXA Health',
-  project:'Digital Transformation Programme',
-  category:'Risk',
-  title:'SOW consolidation required',
-  description:'Multiple SOWs across the programme require consolidation to simplify commercial structure and improve governance.',
-  impact:'Commercial complexity and reduced clarity across engagement structure.',
-  severity:'Low',
-  owner:'Chris',
-  raisedBy:'Tara Williams',
-  actions:'Review and consolidate SOW structure across the programme.',
-  status:'Monitoring'
-}
-    ]
+        client:'Burger & Beyond',
+        project:'Mobile Application Development',
+        category:'Issue',
+        title:'Google Play access revoked',
+        description:'There is a risk that the access to Google Play may be revoked, due to inactivity',
+        impact:'This would cause significant issues to the app build as it will not be able to be launched on Android',
+        severity:'Critical',
+        owner:'Reanie',
+        raisedBy:'Tom and Craig',
+        actions:'Push for deadline 21st April. Work with Francis on how this can be fixed',
+        status:'Open'
+      }
+    ],
+    amber: [
+      {
+        client:'Freemarket FX',
+        project:'Platform Rebuild',
+        category:'Risk',
+        title:'Potential scale down of consultants',
+        description:'Greg mentioned that they may be reducing number of consultants for H2 extensions.',
+        impact:'Reduced consultants on project',
+        severity:'Medium',
+        owner:'Reanie',
+        raisedBy:'Greg',
+        actions:'Maintain communication with Greg throughout this process, and try to keep as much consultants on project as possible',
+        status:'In progress'
+      },
+      {
+        client:'AXA Health',
+        project:'Digital Transformation Programme',
+        category:'Risk',
+        title:'Potential scale down of consultants',
+        description:'Tara has mentioned that they may look to offboard Tony Das and Graeme Cameron after H1',
+        impact:'Reduced consultants on project',
+        severity:'High',
+        owner:'Reanie',
+        raisedBy:'Tara Williams',
+        actions:'Dicuss this in supplier review (24 April) to try to alleviate this as soon as possible',
+        status:'Open'
+      }
+    ],
+    green: []
   },
-projects: [
-  {
-    project: 'AI Roadmap Development Support',
-    client: 'AA Corporation',
-    remainingDays: 34,
-    totalBudget: 76500,
-    budgetSpentPct: 0.5882352941176471,
-    progressPct: 0.759493670886076,
-    surplusDeficit: 0,
-    consultants: 1,
-    expansion30: 0,
-    red: 0,
-    amber: 0,
-    green: 0
-  },
-  {
-  project: 'Data Infrastructure Stabilisation',
-  client: 'Freemarket FX',
-  remainingDays: 91,
-  totalBudget: 61710,
-  budgetSpentPct: 0,
-  progressPct: 0.041666666666666664,
-  surplusDeficit: 0,
-  consultants: 1,
-  expansion30: 1,
-  red: 0,
-  amber: 0,
-  green: 0
-},
-  {
-    project: 'Data Platform Stablisation & Renaissance Integration',
-    client: 'Freemarket FX',
-    remainingDays: 42,
-    totalBudget: 57035,
-    budgetSpentPct: 0.19672131147540983,
-    progressPct: 0.4772727272727273,
-    surplusDeficit: 935,
-    consultants: 1,
-    expansion30: 0,
-    red: 0,
-    amber: 0,
-    green: 0
-  },
-  {
-    project: 'Digital Product Analysis',
-    client: 'AA Corporation',
-    remainingDays: 21,
-    totalBudget: 62500,
-    budgetSpentPct: 0.624,
-    progressPct: 0.8611111111111112,
-    surplusDeficit: 7000,
-    consultants: 1,
-    expansion30: 0,
-    red: 0,
-    amber: 0,
-    green: 0
-  },
-  {
-    project: 'Digital Transformation Programme',
-    client: 'AXA Health',
-    remainingDays: 95,
-    totalBudget: 568236,
-    budgetSpentPct: 0.32003428153091323,
-    progressPct: 0.4406779661016949,
-    surplusDeficit: 0,
-    consultants: 4,
-    expansion30: 0,
-    red: 0,
-    amber: 0,
-    green: 1
-  },
-  {
-    project: 'Mobile Application Development',
-    client: 'Burger & Beyond',
-    remainingDays: 0,
-    totalBudget: 43250,
-    budgetSpentPct: 0.7514450867052023,
-    progressPct: 1,
-    surplusDeficit: 0,
-    consultants: 1,
-    expansion30: 0,
-    red: 0,
-    amber: 0,
-    green: 0
-  },
-  {
-    project: 'Platform Rebuild',
-    client: 'Freemarket FX',
-    remainingDays: 95,
-    totalBudget: 1622225,
-    budgetSpentPct: 0.39221902017291066,
-    progressPct: 0.5875,
-    surplusDeficit: 15427.5,
-    consultants: 13,
-    expansion30: 0,
-    red: 0,
-    amber: 5,
-    green: 1
-  },
-  {
-    project: 'Platform Security Uplift',
-    client: 'Blacklane',
-    remainingDays: 91,
-    totalBudget: 149820,
-    budgetSpentPct: 0,
-    progressPct: 0.010416666666666666,
-    surplusDeficit: 0,
-    consultants: 2,
-    expansion30: 0,
-    red: 0,
-    amber: 0,
-    green: 0
-  },
-  {
-    project: 'SDLC Productivity Metrics',
-    client: 'AXA UK',
-    remainingDays: 49,
-    totalBudget: 178750,
-    budgetSpentPct: 0.4755244755244755,
-    progressPct: 0.7165775401069518,
-    surplusDeficit: 0,
-    consultants: 1,
-    expansion30: 0,
-    red: 0,
-    amber: 0,
-    green: 0
-  },
-  {
-    project: 'Software Development Engineering in Test',
-    client: 'AXA Health',
-    remainingDays: 4,
-    totalBudget: 55800,
-    budgetSpentPct: 0.9354838709677419,
-    progressPct: 0,
-    surplusDeficit: 0,
-    consultants: 1,
-    expansion30: 0,
-    red: 0,
-    amber: 0,
-    green: 0
-  },
-  {
-    project: 'Technology Operating Model Discovery & Design',
-    client: 'AA Corporation',
-    remainingDays: 34,
-    totalBudget: 249950,
-    budgetSpentPct: 1,
-    progressPct: 0.9069767441860465,
-    surplusDeficit: 4722.5,
-    consultants: 4,
-    expansion30: 0,
-    red: 0,
-    amber: 0,
-    green: 0
-  }
-]
+  upcomingFinishers: [
+    { consultant:'Pete Bagnall', client:'AA Corporation', project:'AI Roadmap', daysRemaining:7, status:'In Progress', comment:'Deliverables under review by Ben and Tom', priority:'green' },
+    { consultant:'Andrew Barlow', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'Watch', comment:'Unknown', priority:'amber' },
+    { consultant:'Andrew Broome', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'Watch', comment:'Unknown', priority:'amber' },
+    { consultant:'Selina Kantepudi', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'Watch', comment:'Unknown', priority:'amber' },
+    { consultant:'Adam Scoot', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'Watch', comment:'Unknown', priority:'amber' },
+    { consultant:'Younes Child', client:'Freemarket FX', project:'Data Platform', daysRemaining:17, status:'Watch', comment:"Awaiting Greg's signature", priority:'green' },
+    { consultant:'Marton Meszaros', client:'AXA UK', project:'Productivity Metrics', daysRemaining:22, status:'Offboarding', comment:'Tara confirmed offboarding', priority:'red' }
+  ],
+  projects: [
+    {
+      project: 'AI Roadmap Development Support',
+      client: 'AA Corporation',
+      remainingDays: 68,
+      totalBudget: 107250,
+      budgetSpentPct: 0.588235294,
+      progressPct: 0.759493671,
+      surplusDeficit: 0,
+      consultants: 1,
+      expansion30: 0,
+      red: 0,
+      amber: 0,
+      green: 0
+    },
+    {
+      project: 'Data Infrastructure Stabilisation',
+      client: 'Freemarket FX',
+      remainingDays: 68,
+      totalBudget: 61710,
+      budgetSpentPct: 0,
+      progressPct: 0.041666667,
+      surplusDeficit: 0,
+      consultants: 1,
+      expansion30: 1,
+      red: 0,
+      amber: 0,
+      green: 0
+    },
+    {
+      project: 'Data Platform Stablisation & Renaissance Integration',
+      client: 'Freemarket FX',
+      remainingDays: 106,
+      totalBudget: 116875,
+      budgetSpentPct: 0.196721311,
+      progressPct: 0.477272727,
+      surplusDeficit: 935,
+      consultants: 1,
+      expansion30: 0,
+      red: 0,
+      amber: 0,
+      green: 0
+    },
+    {
+      project: 'Digital Transformation Programme',
+      client: 'AXA Health',
+      remainingDays: 68,
+      totalBudget: 568236,
+      budgetSpentPct: 0.320034282,
+      progressPct: 0.440677966,
+      surplusDeficit: 0,
+      consultants: 4,
+      expansion30: 0,
+      red: 0,
+      amber: 1,
+      green: 0
+    },
+    {
+      project: 'Mobile Application Development',
+      client: 'Burger & Beyond',
+      remainingDays: 0,
+      totalBudget: 43250,
+      budgetSpentPct: 0.751445087,
+      progressPct: 1,
+      surplusDeficit: 0,
+      consultants: 1,
+      expansion30: 0,
+      red: 1,
+      amber: 0,
+      green: 0
+    },
+    {
+      project: 'Platform Rebuild',
+      client: 'Freemarket FX',
+      remainingDays: 68,
+      totalBudget: 1622225,
+      budgetSpentPct: 0.39221902,
+      progressPct: 0.5875,
+      surplusDeficit: 15427.5,
+      consultants: 12,
+      expansion30: 0,
+      red: 0,
+      amber: 1,
+      green: 0
+    },
+    {
+      project: 'Platform Security Uplift',
+      client: 'Blacklane',
+      remainingDays: 62,
+      totalBudget: 149820,
+      budgetSpentPct: 0,
+      progressPct: 0.010416667,
+      surplusDeficit: 0,
+      consultants: 1,
+      expansion30: 0,
+      red: 0,
+      amber: 0,
+      green: 0
+    },
+    {
+      project: 'SDLC Productivity Metrics',
+      client: 'AXA UK',
+      remainingDays: 49,
+      totalBudget: 178750,
+      budgetSpentPct: 0.475524476,
+      progressPct: 0.71657754,
+      surplusDeficit: 0,
+      consultants: 1,
+      expansion30: 0,
+      red: 0,
+      amber: 0,
+      green: 0
+    },
+    {
+      project: 'Software Development Engineering in Test',
+      client: 'AXA Health',
+      remainingDays: 4,
+      totalBudget: 108000,
+      budgetSpentPct: 0.935483871,
+      progressPct: 0,
+      surplusDeficit: 0,
+      consultants: 1,
+      expansion30: 0,
+      red: 0,
+      amber: 0,
+      green: 0
+    },
+    {
+      project: 'Technology Operating Model Discovery & Design',
+      client: 'AA Corporation',
+      remainingDays: 34,
+      totalBudget: 249950,
+      budgetSpentPct: 1,
+      progressPct: 0.906976744,
+      surplusDeficit: 4722.5,
+      consultants: 4,
+      expansion30: 0,
+      red: 0,
+      amber: 0,
+      green: 0
+    },
+    {
+      project: 'Product Design Consultancy',
+      client: 'AA Corporation',
+      remainingDays: 162,
+      totalBudget: 90000,
+      budgetSpentPct: 0,
+      progressPct: 0,
+      surplusDeficit: 0,
+      consultants: 1,
+      expansion30: 0,
+      red: 0,
+      amber: 0,
+      green: 0
+    }
+  ]
 };
 
 const fmtMoney = n => '£' + Number(n).toLocaleString('en-GB', { maximumFractionDigits: 1 });
@@ -501,25 +512,12 @@ const escapeHtml = value => String(value)
   .replace(/>/g, '&gt;')
   .replace(/"/g, '&quot;')
   .replace(/'/g, '&#39;');
+const normaliseText = value => String(value || '').replace(/\s+/g, ' ').trim();
 
 let selectedClient = 'All';
 let pieView = 'project';
 let pieClientFilter = 'All';
 let currentPieSegments = [];
-
-function renderInvoiceChart() {
-  const maxValue = Math.max(...data.invoiceValues.map(item => Math.max(item.actual, item.predicted)), 1);
-
-  el('invoiceChart').innerHTML = data.invoiceValues.map(item => `
-    <div class="invoice-month">
-      <div class="invoice-bars">
-        <div class="invoice-bar actual" title="${escapeHtml(item.month)} actual: ${fmtMoney(item.actual)}" style="height:${item.actual ? Math.max((item.actual / maxValue) * 130, 8) : 0}px;${item.actual ? '' : 'display:none;'}"></div>
-        <div class="invoice-bar predicted" title="${escapeHtml(item.month)} predicted: ${fmtMoney(item.predicted)}" style="height:${item.predicted ? Math.max((item.predicted / maxValue) * 130, 8) : 0}px;${item.predicted ? '' : 'display:none;'}"></div>
-      </div>
-      <div class="invoice-month-label">${escapeHtml(item.month)}</div>
-    </div>
-  `).join('');
-}
 
 function getFilteredProjects() {
   return selectedClient === 'All'
@@ -535,12 +533,12 @@ function getProjectRisks(projectName) {
   );
 }
 
- const kpis = [
+const kpis = [
   { label:'Portfolio Committed Spend', value:() => fmtMoney(data.summary.committedSpend), sub:'Click to view SOW budget by project', action:'showBudgetBreakdown' },
   { label:'Active Consultants', value:() => data.summary.activeConsultants, sub:'Portfolio-wide active consultant count', action:'showConsultantsBreakdown' },
   { label:'Expansion Last 30 Days', value:() => data.summary.expansion30, sub:'New project additions in last 30 days', action:'showExpansionBreakdown' },
   { label:'Completed Projects', value:() => data.summary.completedProjects, sub:'Click to view recently completed engagements', action:'showCompletedProjects' },
-  { label:'Upcoming Finishers (<60 Days)', value:() => 9, sub:'Delivery capacity at risk in next 60 days', action:'showUpcomingFinishers' },
+  { label:'Upcoming Finishers (<60 Days)', value:() => data.upcomingFinishers.length, sub:'Delivery capacity at risk in next 60 days', action:'showUpcomingFinishers' },
 ];
 
 function renderKPIs() {
@@ -582,15 +580,15 @@ function setClientFilter(client) {
 function renderPortfolio() {
   const projects = getFilteredProjects();
   el('portfolioRows').innerHTML = projects.length ? projects.map(project => `
-  <div class="row" data-project="${escapeHtml(project.project)}">
-    <div><div class="project">${escapeHtml(project.project)}</div><div class="client">${escapeHtml(project.client)}</div></div>
-    <div><strong>${fmtMoney(project.totalBudget)}</strong></div>
-    <div><strong>${project.remainingDays}</strong><div class="mini">days</div></div>
-    <div class="risk"><span class="dot red"></span>${project.red}</div>
-    <div class="risk"><span class="dot amber"></span>${project.amber}</div>
-    <div class="risk"><span class="dot green"></span>${project.green}</div>
-  </div>
-`).join('') : '<div class="list-item">No projects match this client filter.</div>';
+    <div class="row" data-project="${escapeHtml(project.project)}">
+      <div><div class="project">${escapeHtml(project.project)}</div><div class="client">${escapeHtml(project.client)}</div></div>
+      <div><strong>${fmtMoney(project.totalBudget)}</strong></div>
+      <div><strong>${project.remainingDays}</strong><div class="mini">days</div></div>
+      <div class="risk"><span class="dot red"></span>${project.red}</div>
+      <div class="risk"><span class="dot amber"></span>${project.amber}</div>
+      <div class="risk"><span class="dot green"></span>${project.green}</div>
+    </div>
+  `).join('') : '<div class="list-item">No projects match this client filter.</div>';
 }
 
 function renderRiskBars() {
@@ -713,9 +711,9 @@ function showProject(index) {
       <div class="list" style="margin-top:10px">
         ${projectRisks.map(risk => `
           <div class="list-item">
-            <strong><span class="risk"><span class="dot ${risk.colour}"></span>${escapeHtml(risk.title)}</span></strong>
-            ${escapeHtml(risk.description)}
-            <div class="mini" style="margin-top:6px">${escapeHtml(risk.category)} • ${escapeHtml(risk.status)} • Owner: ${escapeHtml(risk.owner)}</div>
+            <strong><span class="risk"><span class="dot ${risk.colour}"></span>${escapeHtml(normaliseText(risk.title))}</span></strong>
+            ${escapeHtml(normaliseText(risk.description))}
+            <div class="mini" style="margin-top:6px">${escapeHtml(normaliseText(risk.category))} • ${escapeHtml(normaliseText(risk.status))} • Owner: ${escapeHtml(normaliseText(risk.owner))}</div>
           </div>
         `).join('')}
       </div>
@@ -732,7 +730,7 @@ function showProject(index) {
     <div class="list">
       <div class="list-item"><strong>Risk Position</strong><div class="legend"><span><span class="dot red"></span> Red ${project.red}</span><span><span class="dot amber"></span> Amber ${project.amber}</span><span><span class="dot green"></span> Green ${project.green}</span><span>Expansion last 30 days: ${project.expansion30}</span></div></div>
       ${riskDescriptionBlock}
-    <div class="list-item"><strong>Executive Readout</strong>${escapeHtml(project.project)} for ${escapeHtml(project.client)} has ${project.remainingDays} days remaining.</div>
+      <div class="list-item"><strong>Executive Readout</strong>${escapeHtml(project.project)} for ${escapeHtml(project.client)} has ${project.remainingDays} days remaining.</div>
     </div>
   `;
 
@@ -748,22 +746,22 @@ function showRiskList(key) {
   const title = key.charAt(0).toUpperCase() + key.slice(1) + ' Risks';
   const items = data.risks[key] || [];
 
-  openModal(title, `${items.length} item${items.length === 1 ? '' : 's'} in the current portfolio view`, `
+  openModal(title, `${items.length} item${items.length === 1 ? '' : 's'} in the current portfolio view`, items.length ? `
     <table class="table-simple">
       <thead><tr><th>Client / Project</th><th>Title</th><th>Impact</th><th>Owner</th><th>Status</th></tr></thead>
       <tbody>
         ${items.map(risk => `
           <tr>
-            <td><strong>${escapeHtml(risk.client)}</strong><br>${escapeHtml(risk.project)}</td>
-            <td><strong>${escapeHtml(risk.title)}</strong><br><span class="mini">${escapeHtml(risk.description)}</span></td>
-            <td>${escapeHtml(risk.impact || '—')}<br><span class="mini">Action: ${escapeHtml(risk.actions || '—')}</span></td>
-            <td>${escapeHtml(risk.owner)}<br><span class="mini">Raised by ${escapeHtml(risk.raisedBy || '—')}</span></td>
-            <td>${escapeHtml(risk.status)}</td>
+            <td><strong>${escapeHtml(normaliseText(risk.client))}</strong><br>${escapeHtml(normaliseText(risk.project))}</td>
+            <td><strong>${escapeHtml(normaliseText(risk.title))}</strong><br><span class="mini">${escapeHtml(normaliseText(risk.description))}</span></td>
+            <td>${escapeHtml(normaliseText(risk.impact || '—'))}<br><span class="mini">Action: ${escapeHtml(normaliseText(risk.actions || '—'))}</span></td>
+            <td>${escapeHtml(normaliseText(risk.owner))}<br><span class="mini">Raised by ${escapeHtml(normaliseText(risk.raisedBy || '—'))}</span></td>
+            <td>${escapeHtml(normaliseText(risk.status))}</td>
           </tr>
         `).join('')}
       </tbody>
     </table>
-  `);
+  ` : '<div class="list-item">No risks currently logged in this category.</div>');
 }
 
 function showBudgetBreakdown() {
@@ -820,9 +818,13 @@ function showExpansionBreakdown() {
 }
 
 function showUpcomingFinishers() {
+  const rows = [...data.upcomingFinishers].sort((a, b) => a.daysRemaining - b.daysRemaining);
+  const colourForPriority = priority => ['red', 'amber', 'green'].includes(priority) ? priority : 'amber';
+  const labelForPriority = priority => ({ red: 'Urgent', amber: 'Watch', green: 'In progress' }[priority] || 'Watch');
+
   openModal(
     'Upcoming Finishers (<60 Days)',
-    'Red = <30 days (urgent) • Amber = 30–60 days (watchlist)',
+    'Live detail from the current finisher list',
     `
     <table class="table-simple">
       <thead>
@@ -836,90 +838,19 @@ function showUpcomingFinishers() {
         </tr>
       </thead>
       <tbody>
-
-        <!-- 🔴 RED: <30 DAYS -->
-        <tr>
-          <td><strong>Gabriel Ng</strong></td>
-          <td>Freemarket FX</td>
-          <td>Platform Rebuild</td>
-          <td style="color:#ff6b6b;font-weight:700;">3</td>
-          <td><span style="color:#ff6b6b;font-weight:700;">In progress</span></td>
-          <td>Extension in progress</td>
-        </tr>
-
-        <tr>
-          <td><strong>Sadaf Rashidi</strong></td>
-          <td>AXA Health</td>
-          <td>SDET</td>
-          <td style="color:#ff6b6b;font-weight:700;">20</td>
-          <td><span style="color:#ff6b6b;font-weight:700;">Offboarding</span></td>
-          <td>Offboarding confirmed 26/03 </td>
-        </tr>
-
-        <!-- 🟠 AMBER: 30–60 DAYS -->
-        <tr>
-          <td>Pete Bagnall</td>
-          <td>AA Corporation</td>
-          <td>AI Roadmap</td>
-          <td style="color:#ffbf47;font-weight:700;">34</td>
-          <td><span style="color:#ffbf47;font-weight:700;">Watch</span></td>
-          <td>Update expected mid-April</td>
-        </tr>
-
-        <tr>
-          <td>Andrew Barlow</td>
-          <td>AA Corporation</td>
-          <td>TOM Design</td>
-          <td style="color:#ffbf47;font-weight:700;">34</td>
-        <td><span style="color:#ffbf47;font-weight:700;">Watch</span></td>
-          <td>Unknown</td>
-        </tr>
-
-        <tr>
-          <td>Andrew Broome</td>
-          <td>AA Corporation</td>
-          <td>TOM Design</td>
-          <td style="color:#ffbf47;font-weight:700;">34</td>
-          <td><span style="color:#ffbf47;font-weight:700;">Watch</span></td>
-          <td>Unknown</td>
-        </tr>
-
-        <tr>
-          <td>Selina Kantepudi</td>
-          <td>AA Corporation</td>
-          <td>TOM Design</td>
-          <td style="color:#ffbf47;font-weight:700;">34</td>
-          <td><span style="color:#ffbf47;font-weight:700;">Watch</span></td>
-          <td>Unknown</td>
-        </tr>
-
-        <tr>
-          <td>Adam Scoot</td>
-          <td>AA Corporation</td>
-          <td>TOM Design</td>
-          <td style="color:#ffbf47;font-weight:700;">34</td>
-          <td><span style="color:#ffbf47;font-weight:700;">Watch</span></td>
-          <td>Unknown</td>
-        </tr>
-
-        <tr>
-          <td>Younes Child</td>
-          <td>Freemarket FX</td>
-          <td>Data Platform</td>
-          <td style="color:#ffbf47;font-weight:700;">42</td>
-          <td>Watch</td>
-          <td>Extension likely</td>
-        </tr>
-
-        <tr>
-          <td>Marton Meszaros</td>
-          <td>AXA UK</td>
-          <td>Productivity Metrics</td>
-          <td style="color:#ffbf47;font-weight:700;">49</td>
-          <td>Watch</td>
-          <td>Extension likely</td>
-        </tr>
-
+        ${rows.map(item => {
+          const priority = colourForPriority(item.priority);
+          return `
+            <tr>
+              <td><strong>${escapeHtml(normaliseText(item.consultant))}</strong></td>
+              <td>${escapeHtml(normaliseText(item.client))}</td>
+              <td>${escapeHtml(normaliseText(item.project))}</td>
+              <td style="color:var(--${priority});font-weight:700;">${item.daysRemaining}</td>
+              <td><span style="color:var(--${priority});font-weight:700;">${escapeHtml(normaliseText(item.status || labelForPriority(priority)))}</span></td>
+              <td>${escapeHtml(normaliseText(item.comment || '—'))}</td>
+            </tr>
+          `;
+        }).join('')}
       </tbody>
     </table>
     `
@@ -943,7 +874,7 @@ function showCompletedProjects() {
             <td>${escapeHtml(project.client)}</td>
             <td>${escapeHtml(project.status)}</td>
             <td>${fmtMoney(project.totalBudget)}</td>
-            <td>${escapeHtml(project.closeSummary)}<br><span class="mini">${escapeHtml(project.notes)}</span></td>
+            <td>${escapeHtml(normaliseText(project.closeSummary))}<br><span class="mini">${escapeHtml(normaliseText(project.notes))}</span></td>
           </tr>
         `).join('')}
       </tbody>
@@ -981,20 +912,6 @@ function showPieTooltip(event, segment) {
 
 function hidePieTooltip() {
   el('pieTooltip').style.display = 'none';
-}
-function showInvoiceTooltip(event) {
-  const bar = event.target.closest('.invoice-bar');
-  if (!bar) return;
-
-  const tooltip = el('invoiceTooltip');
-  tooltip.innerHTML = `<strong>${bar.getAttribute('title').split(':')[0]}</strong><div class="mini">${bar.getAttribute('title').split(': ').slice(1).join(': ')}</div>`;
-  tooltip.style.display = 'block';
-  tooltip.style.left = `${event.clientX + 14}px`;
-  tooltip.style.top = `${event.clientY + 14}px`;
-}
-
-function hideInvoiceTooltip() {
-  el('invoiceTooltip').style.display = 'none';
 }
 
 function bindEvents() {
@@ -1067,9 +984,8 @@ function runTests() {
   console.assert(typeof renderProjectCards === 'function', 'renderProjectCards should exist for backwards compatibility');
   console.assert(typeof renderBudgetShare === 'function', 'renderBudgetShare should exist');
   console.assert(Array.isArray(getFilteredProjects()), 'Filtered projects should return an array');
-console.assert(getProjectRisks('Platform Rebuild').length === 6, 'Platform Rebuild should return 6 linked risks');
+  console.assert(getProjectRisks('Platform Rebuild').length === 1, 'Platform Rebuild should return 1 linked risk');
   console.assert(data.projects.find(project => project.project === 'Platform Rebuild').client === 'Freemarket FX', 'Platform Rebuild should belong to Freemarket FX');
-
 
   const originalClient = selectedClient;
   selectedClient = 'AA Corporation';
