@@ -291,21 +291,7 @@ const data = {
     completedProjects: 5
   },
   risks: {
-    red: [
-      {
-        client:'Burger & Beyond',
-        project:'Mobile Application Development',
-        category:'Issue',
-        title:'Google Play access revoked',
-        description:'There is a risk that the access to Google Play may be revoked, due to inactivity',
-        impact:'This would cause significant issues to the app build as it will not be able to be launched on Android',
-        severity:'Critical',
-        owner:'Reanie',
-        raisedBy:'Tom and Craig',
-        actions:'Push for deadline 21st April. Work with Francis on how this can be fixed',
-        status:'Open'
-      }
-    ],
+    red: [],
     amber: [
       {
         client:'Freemarket FX',
@@ -334,22 +320,36 @@ const data = {
         status:'Open'
       }
     ],
-    green: []
+    green: [
+      {
+        client:'Blacklane',
+        project:'Platform Security Uplift',
+        category:'Risk',
+        title:'Resourcing plan updated to prioritise Paul extension',
+        description:'Chris M no longer wants 2 resources, and wants to utilise the budget on extending Paul for an additional 3 months.',
+        impact:'Budget can be focused on continuity through an extension for Paul rather than onboarding a second resource.',
+        severity:'Low',
+        owner:'Reanie',
+        raisedBy:'Chris M',
+        actions:'Align revised extension approach and confirm budget allocation for Paul\'s 3 month extension.',
+        status:'In progress'
+      }
+    ]
   },
   upcomingFinishers: [
     { consultant:'Pete Bagnall', client:'AA Corporation', project:'AI Roadmap', daysRemaining:7, status:'In Progress', comment:'Deliverables under review by Ben and Tom', priority:'green' },
-    { consultant:'Andrew Barlow', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'Watch', comment:'Unknown', priority:'amber' },
-    { consultant:'Andrew Broome', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'Watch', comment:'Unknown', priority:'amber' },
-    { consultant:'Selina Kantepudi', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'Watch', comment:'Unknown', priority:'amber' },
-    { consultant:'Adam Scoot', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'Watch', comment:'Unknown', priority:'amber' },
-    { consultant:'Younes Child', client:'Freemarket FX', project:'Data Platform', daysRemaining:17, status:'Watch', comment:"Awaiting Greg's signature", priority:'green' },
+    { consultant:'Andrew Barlow', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'In Progress', comment:'Proposal has been sent to Nick for sign off, SOW being reviewed by Andrew Barlow.', priority:'amber' },
+    { consultant:'Andrew Broome', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'In Progress', comment:'Proposal has been sent to Nick for sign off, SOW being reviewed by Andrew Barlow.', priority:'amber' },
+    { consultant:'Selina Kantepudi', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'In Progress', comment:'Proposal has been sent to Nick for sign off, SOW being reviewed by Andrew Barlow.', priority:'amber' },
+    { consultant:'Adam Scoot', client:'AA Corporation', project:'TOM Design', daysRemaining:7, status:'Offboarding', comment:'Offboarding confirmed.', priority:'red' },
+    { consultant:'Younes Child', client:'Freemarket FX', project:'Data Platform', daysRemaining:17, status:'In progress', comment:"Awaiting Greg's signature", priority:'green' },
     { consultant:'Marton Meszaros', client:'AXA UK', project:'Productivity Metrics', daysRemaining:22, status:'Offboarding', comment:'Tara confirmed offboarding', priority:'red' }
   ],
   projects: [
     {
       project: 'AI Roadmap Development Support',
       client: 'AA Corporation',
-      remainingDays: 68,
+      remainingDays: 8,
       totalBudget: 107250,
       budgetSpentPct: 0.588235294,
       progressPct: 0.759493671,
@@ -412,7 +412,7 @@ const data = {
       surplusDeficit: 0,
       consultants: 1,
       expansion30: 0,
-      red: 1,
+      red: 0,
       amber: 0,
       green: 0
     },
@@ -442,12 +442,12 @@ const data = {
       expansion30: 0,
       red: 0,
       amber: 0,
-      green: 0
+      green: 1
     },
     {
       project: 'SDLC Productivity Metrics',
       client: 'AXA UK',
-      remainingDays: 49,
+      remainingDays: 22,
       totalBudget: 178750,
       budgetSpentPct: 0.475524476,
       progressPct: 0.71657754,
@@ -461,7 +461,7 @@ const data = {
     {
       project: 'Software Development Engineering in Test',
       client: 'AXA Health',
-      remainingDays: 4,
+      remainingDays: 68,
       totalBudget: 108000,
       budgetSpentPct: 0.935483871,
       progressPct: 0,
@@ -475,7 +475,7 @@ const data = {
     {
       project: 'Technology Operating Model Discovery & Design',
       client: 'AA Corporation',
-      remainingDays: 34,
+      remainingDays: 8,
       totalBudget: 249950,
       budgetSpentPct: 1,
       progressPct: 0.906976744,
@@ -985,7 +985,11 @@ function runTests() {
   console.assert(typeof renderBudgetShare === 'function', 'renderBudgetShare should exist');
   console.assert(Array.isArray(getFilteredProjects()), 'Filtered projects should return an array');
   console.assert(getProjectRisks('Platform Rebuild').length === 1, 'Platform Rebuild should return 1 linked risk');
+  console.assert(getProjectRisks('Platform Security Uplift').length === 1, 'Platform Security Uplift should return 1 linked risk');
   console.assert(data.projects.find(project => project.project === 'Platform Rebuild').client === 'Freemarket FX', 'Platform Rebuild should belong to Freemarket FX');
+  console.assert(data.risks.red.length === 0, 'Red risks should now be empty after Burger & Beyond removal');
+  console.assert(data.projects.find(project => project.project === 'Mobile Application Development').red === 0, 'Burger & Beyond project should no longer show a red risk');
+  console.assert(data.projects.find(project => project.project === 'Platform Security Uplift').green === 1, 'Platform Security Uplift should show one green risk');
 
   const originalClient = selectedClient;
   selectedClient = 'AA Corporation';
@@ -1003,6 +1007,11 @@ function runTests() {
   const aaProjects = data.projects.filter(project => project.client === 'AA Corporation');
   const aaTotal = aaProjects.reduce((sum, project) => sum + project.totalBudget, 0);
   console.assert(aaTotal > 0, 'AA Corporation filtered total should be greater than zero');
+
+  const adam = data.upcomingFinishers.find(item => item.consultant === 'Adam Scoot');
+  const andrewBarlow = data.upcomingFinishers.find(item => item.consultant === 'Andrew Barlow');
+  console.assert(adam && adam.comment === 'Offboarding confirmed.', 'Adam Scoot should show offboarding confirmed');
+  console.assert(andrewBarlow && andrewBarlow.comment.includes('Andrew Barlow'), 'Andrew Barlow note should reference Andrew Barlow');
 
   renderProjectCards();
   console.assert(el('budgetPieLegend').children.length > 0, 'Pie legend should render at least one item');
