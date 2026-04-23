@@ -21,7 +21,7 @@
     .hero p{margin:8px 0 0;color:var(--muted)}
     .badge{padding:10px 14px;border:1px solid rgba(178,251,144,.25);background:rgba(178,251,144,.08);color:var(--brand);border-radius:999px;font-weight:700;white-space:nowrap}
     .grid{display:grid;gap:14px}
-    .kpis{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:18px}
+    .kpis{grid-template-columns:repeat(6,minmax(0,1fr));margin-bottom:18px}
     .invoice-card{padding:18px;margin-bottom:18px}
     .invoice-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
     .invoice-chart{position:relative;height:220px;padding:18px 14px 34px;border:1px solid var(--line);border-radius:16px;background:#141b15;display:flex;align-items:flex-end;gap:14px}
@@ -242,6 +242,16 @@ function checkPassword() {
 }
 
 const data = {
+  newStarters: [
+    {
+      name: 'Hakan Ugur',
+      project: 'Platform Rebuild',
+      client: 'Freemarket FX',
+      role: 'Front End Consultant',
+      compliancePct: 100,
+      contractSigned: 'Yes'
+    }
+  ],
   completedProjects: [
     {
       project: 'SEO Content Consultancy',
@@ -539,6 +549,7 @@ const kpis = [
   { label:'Expansion Last 30 Days', value:() => data.summary.expansion30, sub:'New project additions in last 30 days', action:'showExpansionBreakdown' },
   { label:'Completed Projects', value:() => data.summary.completedProjects, sub:'Click to view recently completed engagements', action:'showCompletedProjects' },
   { label:'Upcoming Finishers (<60 Days)', value:() => data.upcomingFinishers.length, sub:'Delivery capacity at risk in next 60 days', action:'showUpcomingFinishers' },
+  { label:'New Starters', value:() => data.newStarters.length, sub:'Click to view onboarding detail', action:'showNewStarters' },
 ];
 
 function renderKPIs() {
@@ -857,6 +868,45 @@ function showUpcomingFinishers() {
   );
 }
 
+function showNewStarters() {
+  const rows = [...data.newStarters];
+
+  openModal(
+    'New Starters',
+    'Current onboarding tracker detail',
+    rows.length ? `
+      <div class="stat" style="margin-bottom:14px">
+        <div class="label">Total New Starters</div>
+        <div class="value">${rows.length}</div>
+      </div>
+      <table class="table-simple">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Project</th>
+            <th>Client</th>
+            <th>Role</th>
+            <th>Compliance %</th>
+            <th>Contract Signed</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(item => `
+            <tr>
+              <td><strong>${escapeHtml(normaliseText(item.name))}</strong></td>
+              <td>${escapeHtml(normaliseText(item.project))}</td>
+              <td>${escapeHtml(normaliseText(item.client))}</td>
+              <td>${escapeHtml(normaliseText(item.role || '—'))}</td>
+              <td>${fmtPct(Number(item.compliancePct || 0))}</td>
+              <td>${escapeHtml(normaliseText(item.contractSigned || 'No'))}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    ` : '<div class="list-item">No new starters are currently logged.</div>'
+  );
+}
+
 function showCompletedProjects() {
   const rows = data.completedProjects;
   const totalCompletedBudget = rows.reduce((sum, project) => sum + project.totalBudget, 0);
@@ -1012,6 +1062,10 @@ function runTests() {
   const andrewBarlow = data.upcomingFinishers.find(item => item.consultant === 'Andrew Barlow');
   console.assert(adam && adam.comment === 'Offboarding confirmed.', 'Adam Scoot should show offboarding confirmed');
   console.assert(andrewBarlow && andrewBarlow.comment.includes('Andrew Barlow'), 'Andrew Barlow note should reference Andrew Barlow');
+
+  console.assert(Array.isArray(data.newStarters), 'newStarters should exist as an array');
+  console.assert(data.newStarters.length === 1, 'There should currently be 1 new starter');
+  console.assert(data.newStarters[0].name === 'Hakan Ugur', 'Hakan Ugur should be the current new starter');
 
   renderProjectCards();
   console.assert(el('budgetPieLegend').children.length > 0, 'Pie legend should render at least one item');
