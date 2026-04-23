@@ -343,7 +343,7 @@ const data = {
         raisedBy:'Chris M',
         actions:'Align revised extension approach and confirm budget allocation for Paul\'s 3 month extension.',
         status:'In progress'
-      }
+      },
         {
     client:'Blacklane',
     project:'Platform Security Uplift',
@@ -1047,12 +1047,12 @@ function runTests() {
   console.assert(typeof renderProjectCards === 'function', 'renderProjectCards should exist for backwards compatibility');
   console.assert(typeof renderBudgetShare === 'function', 'renderBudgetShare should exist');
   console.assert(Array.isArray(getFilteredProjects()), 'Filtered projects should return an array');
-  console.assert(getProjectRisks('Platform Rebuild').length === 1, 'Platform Rebuild should return 1 linked risk');
-  console.assert(getProjectRisks('Platform Security Uplift').length === 1, 'Platform Security Uplift should return 1 linked risk');
+  console.assert(getProjectRisks('Platform Rebuild').length === 1, 'Platform Rebuild should return 2 linked risks');
+  console.assert(getProjectRisks('Platform Security Uplift').length === 2, 'Platform Security Uplift should return 1 linked risk');
   console.assert(data.projects.find(project => project.project === 'Platform Rebuild').client === 'Freemarket FX', 'Platform Rebuild should belong to Freemarket FX');
   console.assert(data.risks.red.length === 0, 'Red risks should now be empty after Burger & Beyond removal');
   console.assert(data.projects.find(project => project.project === 'Mobile Application Development').red === 0, 'Burger & Beyond project should no longer show a red risk');
-  console.assert(data.projects.find(project => project.project === 'Platform Security Uplift').green === 1, 'Platform Security Uplift should show one green risk');
+  console.assert(data.projects.find(project => project.project === 'Platform Security Uplift').green === 2, 'Platform Security Uplift should show two green risks');
 
   const originalClient = selectedClient;
   selectedClient = 'AA Corporation';
